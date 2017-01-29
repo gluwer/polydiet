@@ -1,0 +1,45 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="polydiet-icons.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="glu-polydiet">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+
+      app-header {
+        color: #fff;
+        background-color: var(--app-primary-color);
+      }
+
+      #mainSection {
+        padding: 0 1rem;
+      }
+    </style>
+
+    <app-header-layout fullbleed>
+
+        <app-header reveals>
+          <app-toolbar>
+            <div main-title>PolyDiet</div>
+          </app-toolbar>
+        </app-header>
+
+        <section role="main" id="mainSection">
+          <p>W trakcie realizacji...</p>
+        </section>
+
+      </app-header-layout>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'glu-polydiet'
+    });
+  </script>
+</dom-module>
