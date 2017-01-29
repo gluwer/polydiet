@@ -17,4 +17,6 @@ module.exports = {
     '/bower_components/webcomponentsjs/webcomponents-lite.min.js',
   ],
   navigateFallback: 'index.html',
+  replacePrefix: '/polydiet',
+  stripPrefix: '/'
 };
