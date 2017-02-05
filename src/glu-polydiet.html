@@ -2,44 +2,96 @@
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="polydiet-icons.html">
-<link rel="import" href="shared-styles.html">
-
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="shared/polydiet-icons.html">
+<link rel="import" href="shared/shared-styles.html">
+<link rel="import" href="foods-grid.html">
+<link rel="import" href="pd-data.html">
 <dom-module id="glu-polydiet">
   <template>
     <style include="shared-styles">
-      :host {
+       :host {
         display: block;
       }
-
+      
       app-header {
         color: #fff;
         background-color: var(--app-primary-color);
       }
-
+      
       #mainSection {
         padding: 0 1rem;
       }
+      
+      footer p.info {
+        text-align: center;
+      }
     </style>
-
     <app-header-layout fullbleed>
-
-        <app-header reveals>
-          <app-toolbar>
-            <div main-title>PolyDiet</div>
-          </app-toolbar>
-        </app-header>
-
-        <section role="main" id="mainSection">
-          <p>W trakcie realizacji...</p>
-        </section>
-
-      </app-header-layout>
+      <app-header reveals>
+        <app-toolbar>
+          <div main-title>PolyDiet</div>
+        </app-toolbar>
+      </app-header>
+      <section role="main" id="mainSection">
+        <pd-data id="data" food-data="{{foods}}"></pd-data>
+        <paper-input label="Filtruj produkty" type="search" placeholder="Wpisz minimum dwa znaki" autosave="test" results="5" value="{{prodSearch}}"></paper-input>
+        <pd-grid id="mainGrid" foods="[[filteredFoods]]" on-sort-changed="sortOrderChanged"></pd-grid>
+      </section>
+      <footer>
+        <p class="info">Dane o składnikach odżywczych pochodzą z ogólnodostępnej bazy <a href="https://www.ars.usda.gov/northeast-area/beltsville-md/beltsville-human-nutrition-research-center/nutrient-data-laboratory/docs/usda-national-nutrient-database-for-standard-reference/">USDA</a>.</p>
+      </footer>
+    </app-header-layout>
   </template>
-
   <script>
     Polymer({
-      is: 'glu-polydiet'
+      is: 'glu-polydiet',
+      properties: {
+        foods: {
+          type: Array,
+          notify: true,
+          value: []
+        },
+        prodSearch: {
+          type: String,
+          notify: true,
+          value: ""
+        },
+        filteredFoods: {
+          type: Array,
+          notify: true,
+          value: []
+        },
+        sortOrder: {
+          type: "string",
+          notify: true,
+          value: "t+"
+        }
+      },
+      observers: [
+        '_filterAndSortFoods(foods, prodSearch, sortOrder)'
+      ],
+      sortOrderChanged: function (e, newSortOrder) {
+        this.sortOrder = newSortOrder;
+      },
+      _filterAndSortFoods: function (foods, prodSearch, sortOrder) {
+        if (prodSearch.length >= 2) {
+          prodSearch = prodSearch.toLowerCase();
+          this._sortFoods(foods.filter(function (item) {
+            return item.t.toLowerCase().indexOf(prodSearch) >= 0;
+          }), sortOrder);
+        } else {
+          this._sortFoods(foods.concat(), sortOrder);
+        }
+      },
+      _sortFoods: function (foods, sortOrder) {
+        var dir = sortOrder[2] === '+' ? -1 : 1,
+          column = sortOrder[0] === 't' ? -1 : parseInt(sortOrder[0]);
+        foods.sort(function (a, b) {
+          return (column === -1 ? (a.t < b.t) : (a.n[column] < b.n[column])) ? dir : -dir;
+        });
+        this.filteredFoods = foods;
+      }
     });
   </script>
 </dom-module>

@@ -1,0 +1,56 @@
+<dom-module id="pd-data">
+  <template>
+  </template>
+  <script>
+    (function () {
+      var foods = [{
+          "id": "gk11pc",
+          "g": 1,
+          "p": "",
+          "t": "Masło, solone",
+          "te": "Butter, salted",
+          "n": [
+            0.85,
+            81.11,
+            51.368,
+            3.278,
+            0.06,
+            0.06,
+            717,
+            0,
+            215
+          ]
+        },
+        {
+          "id": "gnlnc0",
+          "g": 1,
+          "p": "",
+          "t": "Ser camembert",
+          "te": "Cheese, camembert",
+          "n": [
+            19.8,
+            24.26,
+            15.259, -1,
+            0.46,
+            0.46,
+            300,
+            0,
+            72
+          ]
+        }
+      ];
+
+      Polymer({
+        is: 'pd-data',
+        properties: {
+          foodData: {
+            type: Array,
+            readOnly: true,
+            value: foods,
+            notify: true
+          }
+        }
+      });
+    })();
+  </script>
+</dom-module>

@@ -1,0 +1,62 @@
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<dom-module id="foods-grid">
+  <template>
+    <style>
+       :host {
+        display: block;
+      }
+    </style>
+    <vaadin-grid id="grid" items="[[foods]]" frozen-columns="1" selection-mode="disabled" on-sort-order-changed="_sortOrderChanged">
+      <table>
+        <colgroup>
+          <col name="t" flex="2" sortable resizable sort-direction="asc">
+          <col name="n.6" sortable flex="1" resizable>
+          <col name="n.1" sortable flex="1" resizable>
+          <col name="n.0" sortable flex="1" resizable>
+          <col name="n.4" sortable flex="1" resizable>
+          <col name="n.5" sortable hidable flex="1" resizable hidden>
+          <col name="n.7" sortable hidable flex="1" resizable hidden>
+          <col name="n.2" sortable hidable flex="1" hidden>
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Produkt</th>
+            <th>kcal</th>
+            <th>Tłuszcz (g)</th>
+            <th>Białko (g)</th>
+            <th>Węglowodany (g)</th>
+            <th>Cukry (g)</th>
+            <th>Błonnik (g)</th>
+            <th>Tłuszcz nas. (g)</th>
+          </tr>
+        </thead>
+      </table>
+    </vaadin-grid>
+  </template>
+  <script>
+    (function () {
+      var SORT_MAP = ['t', '6', '1', '0', '4', '5', '7', '2'];
+
+      Polymer({
+        is: 'foods-grid',
+        properties: {
+          foods: {
+            type: Array,
+            notify: true,
+            value: []
+          },
+        },
+        _sortOrderChanged: function (e) {
+          // cancel default sorting for arrays.
+          e.preventDefault();
+
+          var grid = this.$.grid;
+          var idx = grid.sortOrder[0].column;
+          var dir = grid.sortOrder[0].direction === 'asc' ? '+' : '-';
+
+          this.fire('sort-changed', [SORT_MAP[idx], dir].join('|'), {bubbles: false});
+        }
+      });
+    })();
+  </script>
+</dom-module>
