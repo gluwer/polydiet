@@ -37,7 +37,7 @@
 /* eslint-disable indent, no-unused-vars, no-multiple-empty-lines, max-nested-callbacks, space-before-function-paren, quotes, comma-spacing */
 'use strict';
 
-var precacheConfig = [["/polydiet/bower_components/webcomponentsjs/webcomponents-lite.min.js","02395895d5d08242c6ba93518a6da2c5"],["/polydiet/index.html","9043f1591227163caaa4a17be77e3331"],["/polydiet/manifest.json","f4dbf1b6f917f7be782733f5d0ad2a0f"],["/polydiet/src/glu-polydiet.html","88778521dc020e62514b88f2557d7872"]];
+var precacheConfig = [["/polydiet/bower_components/vaadin-grid/img/arrow-down.svg","87843160731fb89156338fe41031f08f"],["/polydiet/bower_components/vaadin-grid/img/arrow-up.svg","ec733f37129f1a751c704729a5ee4127"],["/polydiet/bower_components/vaadin-grid/img/ic_check_black_24px.svg","249bdf541475c35f67ed10ed6c9b2bb3"],["/polydiet/bower_components/vaadin-grid/img/ic_view_column_black_24px.svg","d72e622178aa75584380f398970fe560"],["/polydiet/bower_components/vaadin-grid/img/tick.svg","62dd5684f14289b3d34164d971fb9737"],["/polydiet/bower_components/webcomponentsjs/webcomponents-lite.min.js","02395895d5d08242c6ba93518a6da2c5"],["/polydiet/data/foods.json","99489c78febecacbe75f8893e179d8de"],["/polydiet/index.html","9043f1591227163caaa4a17be77e3331"],["/polydiet/manifest.json","f4dbf1b6f917f7be782733f5d0ad2a0f"],["/polydiet/src/glu-polydiet.html","88778521dc020e62514b88f2557d7872"]];
 var cacheName = 'sw-precache-v2--' + (self.registration ? self.registration.scope : '');
 
 
