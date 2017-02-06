@@ -123,6 +123,8 @@ gulp.task('gh-pages-build', gulp.series(gulp.parallel(['build', 'gh-pages-clean'
     `${buildDirectory}/sw.js`,
     `${buildDirectory}/manifest.json`,
     `${buildDirectory}/bower_components/webcomponentsjs/webcomponents-lite.min.js`,
-    `${buildDirectory}/src/glu-polydiet.html`
+    `${buildDirectory}/bower_components/vaadin-grid/img/**/*`,
+    `${buildDirectory}/src/glu-polydiet.html`,
+    `${buildDirectory}/data/foods.json`
   ], {base: buildDirectory}).pipe(gulp.dest(ghPagesDirectory));
 }));

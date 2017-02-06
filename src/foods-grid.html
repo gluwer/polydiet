@@ -6,7 +6,7 @@
         display: block;
       }
     </style>
-    <vaadin-grid id="grid" items="[[foods]]" frozen-columns="1" selection-mode="disabled" on-sort-order-changed="_sortOrderChanged">
+    <vaadin-grid id="grid" items="[[foods]]" frozen-columns="1" selection-mode="disabled" on-sort-order-changed="_sortOrderChanged" column-reordering-allowed>
       <table>
         <colgroup>
           <col name="t" flex="2" sortable resizable sort-direction="asc">
@@ -14,9 +14,10 @@
           <col name="n.1" sortable flex="1" resizable>
           <col name="n.0" sortable flex="1" resizable>
           <col name="n.4" sortable flex="1" resizable>
-          <col name="n.5" sortable hidable flex="1" resizable hidden>
-          <col name="n.7" sortable hidable flex="1" resizable hidden>
-          <col name="n.2" sortable hidable flex="1" hidden>
+          <template is="dom-repeat" items="{{cols}}"
+            as="col">
+            <col name$="[[col]]" sortable hidable flex="1" resizable hidden>
+          </template>
         </colgroup>
         <thead>
           <tr>
@@ -28,6 +29,38 @@
             <th>Cukry (g)</th>
             <th>Błonnik (g)</th>
             <th>Tłuszcz nas. (g)</th>
+            <th>Tłuszcz trans. (g)</th>
+            <th>Cholesterol (mg)</th>
+            <th>Sód (mg)</th>
+            <th>Wapń (mg)</th>
+            <th>Żelazo (mg)</th>
+            <th>Magnez (mg)</th>
+            <th>Fosfor (mg)</th>
+            <th>Potas (mg)</th>
+            <th>Cynk (mg)</th>
+            <th>Miedź (mg)</th>
+            <th>Fluor (ug)</th>
+            <th>Mangan (mg)</th>
+            <th>Selen (ug)</th>
+            <th>Witamin A, RAE (ug)</th>
+            <th>Beta-karoten (ug)</th>
+            <th>Witamina E (mg)</th>
+            <th>Witamina D (ug)</th>
+            <th>Witaminca C (mg)</th>
+            <th>Tiamina, B1 (mg)</th>
+            <th>Ryboflawina, B2 (mg)</th>
+            <th>Niacyna, B3 (mg)</th>
+            <th>Kwas pantotenowy (mg)</th>
+            <th>Witamina B6 (mg)</th>
+            <th>Foliany (ug)</th>
+            <th>Witamina B12 (ug)</th>
+            <th>Witamina K (ug)</th>
+            <th>Cholina (mg)</th>
+            <th>Woda (g)</th>
+            <th>Alkohol (g)</th>
+            <th>Kofeina (mg)</th>
+            <th>Likopen (ug)</th>
+            <th>Luteina (ug)</th>
           </tr>
         </thead>
       </table>
@@ -35,7 +68,10 @@
   </template>
   <script>
     (function () {
-      var SORT_MAP = ['t', '6', '1', '0', '4', '5', '7', '2'];
+      var SORT_MAP = ['t', '6', '1', '0', '4', '5', '7', '2', '3'];
+      for (var i = 8; i <= 38; i++) {
+        SORT_MAP.push(''+i);
+      }
 
       Polymer({
         is: 'foods-grid',
@@ -45,16 +81,21 @@
             notify: true,
             value: []
           },
+          cols: {
+            type: Array,
+            value: SORT_MAP.slice(5).map(function(i) {return 'n.'+i; })
+          }
         },
         _sortOrderChanged: function (e) {
-          // cancel default sorting for arrays.
+          // do not bubble as we use own event for sorting changes
           e.preventDefault();
+          e.stopPropagation();
 
           var grid = this.$.grid;
           var idx = grid.sortOrder[0].column;
           var dir = grid.sortOrder[0].direction === 'asc' ? '+' : '-';
 
-          this.fire('sort-changed', [SORT_MAP[idx], dir].join('|'), {bubbles: false});
+          this.fire('sort-changed', [SORT_MAP[idx], dir], {bubbles: false});
         }
       });
     })();

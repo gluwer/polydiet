@@ -1,54 +1,24 @@
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <dom-module id="pd-data">
   <template>
+    <iron-ajax auto url="../data/foods.json" handle-as="json" on-response="handleResponse"></iron-ajax>
   </template>
   <script>
     (function () {
-      var foods = [{
-          "id": "gk11pc",
-          "g": 1,
-          "p": "",
-          "t": "Masło, solone",
-          "te": "Butter, salted",
-          "n": [
-            0.85,
-            81.11,
-            51.368,
-            3.278,
-            0.06,
-            0.06,
-            717,
-            0,
-            215
-          ]
-        },
-        {
-          "id": "gnlnc0",
-          "g": 1,
-          "p": "",
-          "t": "Ser camembert",
-          "te": "Cheese, camembert",
-          "n": [
-            19.8,
-            24.26,
-            15.259, -1,
-            0.46,
-            0.46,
-            300,
-            0,
-            72
-          ]
-        }
-      ];
-
       Polymer({
         is: 'pd-data',
         properties: {
           foodData: {
             type: Array,
-            readOnly: true,
-            value: foods,
+            value: [],
             notify: true
           }
+        },
+        handleResponse: function (e) {
+          var data = e.detail.response;
+          // inline edit, but not a problem in this case
+          data.unshift('foodData');
+          this.push.apply(this, data);
         }
       });
     })();

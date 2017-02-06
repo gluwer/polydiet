@@ -14,7 +14,9 @@ module.exports = {
   staticFileGlobs: [
     '/index.html',
     '/manifest.json',
+    '/data/foods.json',
     '/bower_components/webcomponentsjs/webcomponents-lite.min.js',
+    '/bower_components/vaadin-grid/img/**/*',
   ],
   navigateFallback: 'index.html',
   replacePrefix: '/polydiet',
