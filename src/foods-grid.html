@@ -6,7 +6,7 @@
         display: block;
       }
     </style>
-    <vaadin-grid id="grid" items="[[foods]]" frozen-columns="1" selection-mode="disabled" on-sort-order-changed="_sortOrderChanged" column-reordering-allowed>
+    <vaadin-grid id="grid" items="[[foods]]" frozen-columns="1" selection-mode="single" on-sort-order-changed="_sortOrderChanged" on-selected-items-changed="_selectedChanged">
       <table>
         <colgroup>
           <col name="t" flex="2" sortable resizable sort-direction="asc">
@@ -96,6 +96,20 @@
           var dir = grid.sortOrder[0].direction === 'asc' ? '+' : '-';
 
           this.fire('sort-changed', [SORT_MAP[idx], dir], {bubbles: false});
+        },
+        _selectedChanged: function() {
+          var grid = this.$.grid;
+              selectedIds = grid.selection.selected(),
+              row = null;
+
+          if (selectedIds.length > 0) {
+            row = this.foods[selectedIds[0]];
+          }
+
+          this.fire('selected-changed', {item: row}, {bubbles: false});
+        },
+        resetSelected: function() {
+          this.$.grid.selection.clear();
         }
       });
     })();

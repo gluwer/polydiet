@@ -5,8 +5,22 @@
   <template>
     <style>
       :host {
-        --app-primary-color: #4285f4;
-        --app-secondary-color: black;
+        --dark-primary-color:       #512DA8;
+        --default-primary-color:    #673AB7;
+        --light-primary-color:      #D1C4E9;
+        --text-primary-color:       #FFFFFF;
+        --accent-color:             #009688;
+        --primary-background-color: #d1d1d1;
+        --primary-text-color:       #212121;
+        --secondary-text-color:     #757575;
+        --disabled-text-color:      #BDBDBD;
+        --divider-color:            #BDBDBD;
+
+
+        /* Components */
+        --app-primary-color: var(--default-primary-color);
+        --app-secondary-color: var(--accent-color);
+        --paper-tabs-selection-bar-color: var(--accent-color);
       }
     </style>
   </template>

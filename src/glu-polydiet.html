@@ -3,7 +3,13 @@
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="shared/polydiet-icons.html">
+<link rel="import" href="shared/shared-styles.html">
 <link rel="import" href="shared/shared-styles.html">
 <link rel="import" href="foods-grid.html">
 <link rel="import" href="pd-data.html">
@@ -23,12 +29,18 @@
         padding: 0 1rem;
       }
       
+      #addFood {
+        margin: 1rem;
+      }
+      
       footer p.info {
+        margin-top: 2rem;
         color: #666;
         font-size: 75%;
         text-align: center;
       }
     </style>
+    <pd-data id="data" food-data="{{foods}}"></pd-data>
     <app-header-layout fullbleed>
       <app-header reveals>
         <app-toolbar>
@@ -36,19 +48,44 @@
         </app-toolbar>
       </app-header>
       <section role="main" id="mainSection">
-        <pd-data id="data" food-data="{{foods}}"></pd-data>
-        <paper-input label="Filtruj produkty" type="search" placeholder="Wpisz minimum dwa znaki" autosave="test" results="5" value="{{prodSearch}}"></paper-input>
-        <foods-grid id="mainGrid" foods="[[filteredFoods]]" on-sort-changed="sortOrderChanged"></foods-grid>
+        <paper-tabs selected="{{selectedTab}}" no-slide>
+          <paper-tab>Produkty</paper-tab>
+          <paper-tab>Statystyki</paper-tab>
+        </paper-tabs>
+        <iron-pages selected="{{selectedTab}}">
+          <div>
+            <paper-input label="Filtruj produkty" type="search" placeholder="Wpisz minimum dwa znaki" autosave="test" results="5" value="{{prodSearch}}"></paper-input>
+            <foods-grid id="foodsList" foods="[[filteredFoods]]" on-sort-changed="sortOrderChanged" on-selected-changed="selectedFoodChanged"></foods-grid>
+            <paper-fab icon="polydiet-icons:add" id="addFood" disabled="[[!isFoodSelected]]" on-tap="openAddFoodModal"></paper-fab>
+          </div>
+          <div>
+            <p>Statystyki w trakcie realizacji</p>
+          </div>
+        </iron-pages>
       </section>
       <footer>
         <p class="info">Dane o składnikach odżywczych pochodzą z ogólnodostępnej bazy <a href="https://www.ars.usda.gov/northeast-area/beltsville-md/beltsville-human-nutrition-research-center/nutrient-data-laboratory/docs/usda-national-nutrient-database-for-standard-reference/">USDA</a>.</p>
       </footer>
     </app-header-layout>
+    <paper-dialog modal id="addSelectedFoodModal">
+      <h2>Dodaj produkt &quot;[[selectedFood.t]]&quot;</h2>
+      <p>
+        <paper-input label="Waga w gramach" type="number" placeholder="Wpisz wagę w gramach" id="addFoodQuantity" autofocus></paper-input>
+      </p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Anuluj</paper-button>
+        <paper-button dialog-confirm on-tap="addSelectedFoodToList">Dodaj do listy tygodniowej</paper-button>
+      </div>
+    </paper-dialog>
   </template>
   <script>
     Polymer({
       is: 'glu-polydiet',
       properties: {
+        selectedTab: {
+          type: Number,
+          value: 0
+        },
         foods: {
           type: Array,
           notify: true,
@@ -68,13 +105,35 @@
           type: "string",
           notify: true,
           value: "t+"
+        },
+        selectedFood: {
+          type: Object,
+          notify: true,
+          value: null
+        },
+        isFoodSelected: {
+          type: Boolean,
+          notify: true,
+          value: false
         }
       },
       observers: [
         '_filterAndSortFoods(foods, prodSearch, sortOrder)'
       ],
+      addSelectedFoodToList: function () {
+        alert(this.selectedFood.t + ":" + this.$.addFoodQuantity.value);
+        this.$.foodsList.resetSelected();
+      },
+      openAddFoodModal: function () {
+        this.$.addFoodQuantity.value = null;
+        this.$.addSelectedFoodModal.open();
+      },
       sortOrderChanged: function (e, newSortOrder) {
         this.sortOrder = newSortOrder;
+      },
+      selectedFoodChanged: function (e, selectedFood) {
+        this.isFoodSelected = selectedFood.item === null ? false : true;
+        this.selectedFood = selectedFood.item;
       },
       _filterAndSortFoods: function (foods, prodSearch, sortOrder) {
         if (prodSearch.length >= 2) {
