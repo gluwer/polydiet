@@ -1,12 +1,18 @@
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="shared/shared-styles.html">
 <dom-module id="foods-grid">
   <template>
-    <style>
+    <style include="shared-styles">
        :host {
         display: block;
       }
+      
+      #grid {
+        @apply(--grid-styling);
+      }
     </style>
-    <vaadin-grid id="grid" items="[[foods]]" frozen-columns="1" selection-mode="single" on-sort-order-changed="_sortOrderChanged" on-selected-items-changed="_selectedChanged">
+    <vaadin-grid id="grid" items="[[foods]]" frozen-columns="1" selection-mode="single" visible-rows="10" on-sort-order-changed="_sortOrderChanged"
+      on-selected-items-changed="_selectedChanged">
       <table>
         <colgroup>
           <col name="t" flex="2" sortable resizable sort-direction="asc">
@@ -14,8 +20,7 @@
           <col name="n.1" sortable flex="1" resizable>
           <col name="n.0" sortable flex="1" resizable>
           <col name="n.4" sortable flex="1" resizable>
-          <template is="dom-repeat" items="{{cols}}"
-            as="col">
+          <template is="dom-repeat" items="{{cols}}" as="col">
             <col name$="[[col]]" sortable hidable flex="1" resizable hidden>
           </template>
         </colgroup>
@@ -70,7 +75,7 @@
     (function () {
       var SORT_MAP = ['t', '6', '1', '0', '4', '5', '7', '2', '3'];
       for (var i = 8; i <= 38; i++) {
-        SORT_MAP.push(''+i);
+        SORT_MAP.push('' + i);
       }
 
       Polymer({
@@ -83,7 +88,9 @@
           },
           cols: {
             type: Array,
-            value: SORT_MAP.slice(5).map(function(i) {return 'n.'+i; })
+            value: SORT_MAP.slice(5).map(function (i) {
+              return 'n.' + i;
+            })
           }
         },
         _sortOrderChanged: function (e) {
@@ -95,20 +102,26 @@
           var idx = grid.sortOrder[0].column;
           var dir = grid.sortOrder[0].direction === 'asc' ? '+' : '-';
 
-          this.fire('sort-changed', [SORT_MAP[idx], dir], {bubbles: false});
+          this.fire('sort-changed', [SORT_MAP[idx], dir], {
+            bubbles: false
+          });
         },
-        _selectedChanged: function() {
-          var grid = this.$.grid;
-              selectedIds = grid.selection.selected(),
-              row = null;
+        _selectedChanged: function () {
+          var grid = this.$.grid,
+            selectedIds = grid.selection.selected(),
+            row = null;
 
           if (selectedIds.length > 0) {
             row = this.foods[selectedIds[0]];
           }
 
-          this.fire('selected-changed', {item: row}, {bubbles: false});
+          this.fire('selected-changed', {
+            item: row
+          }, {
+            bubbles: false
+          });
         },
-        resetSelected: function() {
+        resetSelected: function () {
           this.$.grid.selection.clear();
         }
       });

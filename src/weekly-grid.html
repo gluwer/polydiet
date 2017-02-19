@@ -1,0 +1,207 @@
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="shared/polydiet-icons.html">
+<link rel="import" href="shared/grid-sort-behavior.html">
+<link rel="import" href="shared/shared-styles.html">
+<dom-module id="weekly-grid">
+  <template>
+    <style include="shared-styles">
+       :host {
+        display: block;
+      }
+      
+      #grid {
+        @apply(--grid-styling);
+      }
+      
+      #deleteProducts {
+        margin: 1rem;
+      }
+    </style>
+    <vaadin-grid id="grid" items="[[sortedGrid]]" frozen-columns="2" selection-mode="multi" on-sort-order-changed="_sortOrderChanged"
+      on-selected-items-changed="_selectedChanged">
+      <table>
+        <colgroup>
+          <col name="t" flex="2" sortable resizable sort-direction="asc">
+          <col name="a" sortable resizable flex="1">
+          <col name="n.6" sortable flex="1" resizable>
+          <col name="n.1" sortable flex="1" resizable>
+          <col name="n.0" sortable flex="1" resizable>
+          <col name="n.4" sortable flex="1" resizable>
+          <template is="dom-repeat" items="{{cols}}" as="col">
+            <col name$="[[col]]" sortable hidable flex="1" resizable hidden>
+          </template>
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Produkt</th>
+            <th>Porcja (g)</th>
+            <th>kcal</th>
+            <th>Tłuszcz (g)</th>
+            <th>Białko (g)</th>
+            <th>Węglowodany (g)</th>
+            <th>Cukry (g)</th>
+            <th>Błonnik (g)</th>
+            <th>Tłuszcz nas. (g)</th>
+            <th>Tłuszcz trans. (g)</th>
+            <th>Cholesterol (mg)</th>
+            <th>Sód (mg)</th>
+            <th>Wapń (mg)</th>
+            <th>Żelazo (mg)</th>
+            <th>Magnez (mg)</th>
+            <th>Fosfor (mg)</th>
+            <th>Potas (mg)</th>
+            <th>Cynk (mg)</th>
+            <th>Miedź (mg)</th>
+            <th>Fluor (ug)</th>
+            <th>Mangan (mg)</th>
+            <th>Selen (ug)</th>
+            <th>Witamin A, RAE (ug)</th>
+            <th>Beta-karoten (ug)</th>
+            <th>Witamina E (mg)</th>
+            <th>Witamina D (ug)</th>
+            <th>Witaminca C (mg)</th>
+            <th>Tiamina, B1 (mg)</th>
+            <th>Ryboflawina, B2 (mg)</th>
+            <th>Niacyna, B3 (mg)</th>
+            <th>Kwas pantotenowy (mg)</th>
+            <th>Witamina B6 (mg)</th>
+            <th>Foliany (ug)</th>
+            <th>Witamina B12 (ug)</th>
+            <th>Witamina K (ug)</th>
+            <th>Cholina (mg)</th>
+            <th>Woda (g)</th>
+            <th>Alkohol (g)</th>
+            <th>Kofeina (mg)</th>
+            <th>Likopen (ug)</th>
+            <th>Luteina (ug)</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <template is="dom-repeat" items="[[sums]]" as="sum" index-as="index" id="footerRow">
+              <td>[[sum]]</td>
+            </template>
+          </tr>
+        </tfoot>
+      </table>
+    </vaadin-grid>
+    <paper-fab icon="polydiet-icons:delete" id="deleteProducts" disabled="[[!isProductSelected]]" on-tap="removeSelected"></paper-fab>
+  </template>
+  <script>
+    (function () {
+      var SORT_MAP = ['t', 'a', '6', '1', '0', '4', '5', '7', '2', '3'];
+      for (var i = 8; i <= 38; i++) {
+        SORT_MAP.push('' + i);
+      }
+
+      Polymer({
+        is: 'weekly-grid',
+        properties: {
+          products: {
+            type: Array,
+            value: [],
+
+          },
+          selectedRows: {
+            type: Array,
+            value: [],
+            notify: true,
+            observer: '_selectedRowsChanged'
+          },
+          cols: {
+            type: Array,
+            value: SORT_MAP.slice(6).map(function (i) {
+              return 'n.' + i;
+            })
+          },
+          sums: {
+            type: Array,
+            value: SORT_MAP.map(function (i) {
+              return i === "t" ? "Suma:" : 0;
+            })
+          },
+          isProductSelected: {
+            type: Boolean,
+            notify: true,
+            value: false
+          }
+        },
+        behaviors: [GluBehaviors.GridSort],
+        observers: [
+          '_sortProducts(products.*, sortOrder)',
+          'recalculateSums(products.*)'
+        ],
+        _sortProducts: function (products, sortOrder) {
+          this.sortGrid(products.base.concat(), sortOrder);
+        },
+        // TODO: move to behavior when sorting will be in foods-grid...
+        _sortOrderChanged: function (e) {
+          // do not bubble
+          e.preventDefault();
+          e.stopPropagation();
+
+          var grid = this.$.grid;
+          var idx = grid.sortOrder[0].column;
+          var dir = grid.sortOrder[0].direction === 'asc' ? '+' : '-';
+
+          this.sortOrderChanged(undefined, [SORT_MAP[idx], dir]);
+        },
+        recalculateSums: function (products) {
+          var gridFooter = this.$.grid.footer;
+
+          this.sums = SORT_MAP.map(function (id, index) {
+            if (id === 't') return "Suma:";
+
+            var sum = products.base.reduce(function (sum, product) {
+              var value = -1;
+
+              switch (id) {
+                case 'a':
+                  value = product[id];
+                  break;
+                default:
+                  value = product.n[id];
+              }
+
+              return value > 0 ? sum + value : sum;
+            }, 0);
+
+            var shownValue = sum.toFixed(sum < 1 ? 3 : (sum < 10 ? 2 : (sum < 100 ? 1 : 0)));
+
+            // Well, the grid doesn't update footer :(, have to do it manually.
+            if (gridFooter && gridFooter.rowCount > 0) {
+              try {
+                // Ahh, must by try/catch as cannot check if cell is available (as some columns are hidden).
+                gridFooter.getCell(0, index).content = shownValue;
+              } catch (e) {}
+            }
+
+            return shownValue;
+          });
+        },
+        _selectedRowsChanged: function (rows) {
+          this.isProductSelected = rows.length > 0 ? true : false;
+        },
+        _selectedChanged: function () {
+          var selectedIds = this.$.grid.selection.selected();
+
+          this.selectedRows = selectedIds.length === 0 ? [] : selectedIds.map(function (id) {
+            return this.sortedGrid[id];
+          }.bind(this));
+        },
+        removeSelected: function (e) {
+          var selectedRows = this.selectedRows.concat();
+          
+          this.$.grid.selection.clear();
+
+          this.fire('remove-used', {
+            products: selectedRows
+          }, {
+            bubbles: false
+          });
+        }
+      });
+    })();
+  </script>
+</dom-module>

@@ -1,0 +1,31 @@
+<script>
+  if (!window.GluBehaviors) {
+    window.GluBehaviors = {};
+  }
+
+  GluBehaviors.GridSort = {
+    properties: {
+      sortedGrid: {
+        type: Array,
+        notify: true,
+        value: []
+      },
+      sortOrder: {
+        type: Array,
+        notify: true,
+        value: ["t", "+"]
+      },
+    },
+    sortOrderChanged: function (e, newSortOrder) {
+      this.sortOrder = newSortOrder;
+    },
+    sortGrid: function (items, sortOrder) {
+      var dir = sortOrder[1] === '+' ? -1 : 1,
+        column = sortOrder[0] === 't' ? -1 : parseInt(sortOrder[0]);
+      items.sort(function (a, b) {
+        return (column === -1 ? (a.t < b.t) : (a.n[column] < b.n[column])) ? dir : -dir;
+      });
+      this.sortedGrid = items;
+    }
+  };
+</script>

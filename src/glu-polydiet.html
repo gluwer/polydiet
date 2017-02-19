@@ -1,6 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
@@ -10,8 +9,9 @@
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="shared/polydiet-icons.html">
 <link rel="import" href="shared/shared-styles.html">
-<link rel="import" href="shared/shared-styles.html">
+<link rel="import" href="shared/grid-sort-behavior.html">
 <link rel="import" href="foods-grid.html">
+<link rel="import" href="weekly-grid.html">
 <link rel="import" href="pd-data.html">
 <dom-module id="glu-polydiet">
   <template>
@@ -40,8 +40,8 @@
         text-align: center;
       }
     </style>
-    <pd-data id="data" food-data="{{foods}}"></pd-data>
-    <app-header-layout fullbleed>
+    <pd-data id="data" food-data="{{foods}}" weekly-products="{{weeklyProducts}}"></pd-data>
+    <div class="container">
       <app-header reveals>
         <app-toolbar>
           <div main-title>PolyDiet</div>
@@ -49,13 +49,18 @@
       </app-header>
       <section role="main" id="mainSection">
         <paper-tabs selected="{{selectedTab}}" no-slide>
+          <paper-tab>Tygodniówka</paper-tab>
           <paper-tab>Produkty</paper-tab>
           <paper-tab>Statystyki</paper-tab>
         </paper-tabs>
         <iron-pages selected="{{selectedTab}}">
           <div>
+            <weekly-grid id="weeklyList" products="[[weeklyProducts]]" on-remove-used="removeFoodsFromList">
+              </foods-grid>
+          </div>
+          <div>
             <paper-input label="Filtruj produkty" type="search" placeholder="Wpisz minimum dwa znaki" autosave="test" results="5" value="{{prodSearch}}"></paper-input>
-            <foods-grid id="foodsList" foods="[[filteredFoods]]" on-sort-changed="sortOrderChanged" on-selected-changed="selectedFoodChanged"></foods-grid>
+            <foods-grid id="foodsList" foods="[[sortedGrid]]" on-sort-changed="sortOrderChanged" on-selected-changed="selectedFoodChanged"></foods-grid>
             <paper-fab icon="polydiet-icons:add" id="addFood" disabled="[[!isFoodSelected]]" on-tap="openAddFoodModal"></paper-fab>
           </div>
           <div>
@@ -66,7 +71,7 @@
       <footer>
         <p class="info">Dane o składnikach odżywczych pochodzą z ogólnodostępnej bazy <a href="https://www.ars.usda.gov/northeast-area/beltsville-md/beltsville-human-nutrition-research-center/nutrient-data-laboratory/docs/usda-national-nutrient-database-for-standard-reference/">USDA</a>.</p>
       </footer>
-    </app-header-layout>
+    </div>
     <paper-dialog modal id="addSelectedFoodModal">
       <h2>Dodaj produkt &quot;[[selectedFood.t]]&quot;</h2>
       <p>
@@ -91,20 +96,15 @@
           notify: true,
           value: []
         },
-        prodSearch: {
-          type: String,
-          notify: true,
-          value: ""
-        },
-        filteredFoods: {
+        weeklyProducts: {
           type: Array,
           notify: true,
           value: []
         },
-        sortOrder: {
-          type: "string",
+        prodSearch: {
+          type: String,
           notify: true,
-          value: "t+"
+          value: ""
         },
         selectedFood: {
           type: Object,
@@ -117,19 +117,34 @@
           value: false
         }
       },
+      behaviors: [GluBehaviors.GridSort],
       observers: [
         '_filterAndSortFoods(foods, prodSearch, sortOrder)'
       ],
       addSelectedFoodToList: function () {
-        alert(this.selectedFood.t + ":" + this.$.addFoodQuantity.value);
-        this.$.foodsList.resetSelected();
+        var amount = this.$.addFoodQuantity.value,
+          foodWithAmount;
+
+        if (amount > 0) {
+          foodWithAmount = Object.assign({}, this.selectedFood);
+          foodWithAmount.a = parseFloat(amount);
+          this.push("weeklyProducts", foodWithAmount);
+          this.$.foodsList.resetSelected();
+        }
+      },
+      removeFoodsFromList: function (e, data) {
+        data.products.forEach(function (food) {
+          for (var i = 0; i < this.weeklyProducts.length; i++) {
+            if (this.weeklyProducts[i].id === food.id) {
+              this.splice("weeklyProducts", i, 1);
+              return;
+            }
+          }
+        }.bind(this));
       },
       openAddFoodModal: function () {
         this.$.addFoodQuantity.value = null;
         this.$.addSelectedFoodModal.open();
-      },
-      sortOrderChanged: function (e, newSortOrder) {
-        this.sortOrder = newSortOrder;
       },
       selectedFoodChanged: function (e, selectedFood) {
         this.isFoodSelected = selectedFood.item === null ? false : true;
@@ -138,20 +153,12 @@
       _filterAndSortFoods: function (foods, prodSearch, sortOrder) {
         if (prodSearch.length >= 2) {
           prodSearch = prodSearch.toLowerCase();
-          this._sortFoods(foods.filter(function (item) {
+          this.sortGrid(foods.filter(function (item) {
             return item.t.toLowerCase().indexOf(prodSearch) >= 0;
           }), sortOrder);
         } else {
-          this._sortFoods(foods.concat(), sortOrder);
+          this.sortGrid(foods.concat(), sortOrder);
         }
-      },
-      _sortFoods: function (foods, sortOrder) {
-        var dir = sortOrder[1] === '+' ? -1 : 1,
-          column = sortOrder[0] === 't' ? -1 : parseInt(sortOrder[0]);
-        foods.sort(function (a, b) {
-          return (column === -1 ? (a.t < b.t) : (a.n[column] < b.n[column])) ? dir : -dir;
-        });
-        this.filteredFoods = foods;
       }
     });
   </script>

@@ -1,10 +1,16 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
 <dom-module id="pd-data">
   <template>
     <iron-ajax auto url="../data/foods.json" handle-as="json" on-response="handleResponse"></iron-ajax>
+    <app-localstorage-document key="weeklyProducts" data="{{weeklyProducts}}"></app-localstorage-document>
   </template>
   <script>
     (function () {
+      var GOALS = [
+
+      ];
+
       Polymer({
         is: 'pd-data',
         properties: {
@@ -12,6 +18,16 @@
             type: Array,
             value: [],
             notify: true
+          },
+          weeklyProducts: {
+            type: Array,
+            value: [],
+            notify: true
+          },
+           goals: {
+            type: Array,
+            value: GOALS,
+            readOnly: true
           }
         },
         handleResponse: function (e) {
