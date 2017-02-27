@@ -1,31 +1,33 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-
 <!-- shared styles for all views -->
 <dom-module id="shared-styles">
   <template>
     <style>
-      :host {
-        --dark-primary-color:       #512DA8;
-        --default-primary-color:    #673AB7;
-        --light-primary-color:      #D1C4E9;
-        --text-primary-color:       #FFFFFF;
-        --accent-color:             #009688;
+       :host {
+        --dark-primary-color: #512DA8;
+        --default-primary-color: #673AB7;
+        --light-primary-color: #D1C4E9;
+        --text-primary-color: #FFFFFF;
+        --accent-color: #009688;
         --primary-background-color: #d1d1d1;
-        --primary-text-color:       #212121;
-        --secondary-text-color:     #757575;
-        --disabled-text-color:      #BDBDBD;
-        --divider-color:            #BDBDBD;
-
-
+        --primary-text-color: #212121;
+        --secondary-text-color: #757575;
+        --disabled-text-color: #BDBDBD;
+        --divider-color: #BDBDBD;
         /* Components */
         --app-primary-color: var(--default-primary-color);
         --app-secondary-color: var(--accent-color);
         --paper-tabs-selection-bar-color: var(--accent-color);
-
-        --grid-styling {
-          --vaadin-grid-row-height: 32px;
-          --vaadin-grid-header-row-height: 44px;
-          --vaadin-grid-footer-row-height: 44px;
+        vaadin-grid {
+          --vaadin-grid-cell: {
+            height: 32px;
+          }
+          --vaadin-grid-header-cell: {
+            height: 44px;
+          }
+          --vaadin-grid-footer-cell: {
+            height: 44px;
+          }
         }
       }
     </style>

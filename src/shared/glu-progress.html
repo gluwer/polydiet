@@ -1,0 +1,63 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
+<dom-module id="glu-progress">
+  <template>
+    <style>
+       :host {
+        display: block;
+      }
+
+      #progress {
+        width: 100%;
+      }
+    </style>
+    <div>[[text]]</div>
+    <paper-progress id="progress" value="[[value]]" secondary-progress="[[secondary]]"></paper-progress>
+  </template>
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+        is: 'glu-progress',
+        properties: {
+          current: {
+            type: Number,
+            value: 0,
+            reflectToAttribute: true
+          },
+          limit: {
+            type: Number,
+            value: 100,
+            reflectToAttribute: true
+          },
+          text: {
+            type: String,
+            value: "0",
+            reflectToAttribute: true
+          },
+          value: {
+            type: Number,
+            computed: '_value(current, limit)'
+          },
+          secondary: {
+            type: Number,
+            computed: '_secondary(current, limit)'
+          }
+        },
+        _value: function (current, limit) {
+          if (limit === 0) {
+            return current > 0 ? 100 : 0;
+          }
+          return (current > limit ? limit/current : current/limit) * 100;
+        },
+        _secondary: function (current, limit) {
+          if (limit === 0) {
+            return 0;
+          }
+          return current > limit ? 100 : 0;
+        }
+      });
+    })();
+  </script>
+</dom-module>

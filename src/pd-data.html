@@ -7,10 +7,6 @@
   </template>
   <script>
     (function () {
-      var GOALS = [
-
-      ];
-
       Polymer({
         is: 'pd-data',
         properties: {
@@ -23,11 +19,6 @@
             type: Array,
             value: [],
             notify: true
-          },
-           goals: {
-            type: Array,
-            value: GOALS,
-            readOnly: true
           }
         },
         handleResponse: function (e) {

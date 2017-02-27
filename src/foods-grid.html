@@ -1,5 +1,12 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="shared/polydiet-icons.html">
 <link rel="import" href="shared/shared-styles.html">
+<link rel="import" href="shared/formatters-behavior.html">
 <dom-module id="foods-grid">
   <template>
     <style include="shared-styles">
@@ -7,122 +14,96 @@
         display: block;
       }
       
-      #grid {
-        @apply(--grid-styling);
+      #addFood {
+        margin: 1rem;
       }
+
+      #grid {
+          --vaadin-grid-header-cell: {
+            height: 85px;
+          }
+        }
     </style>
-    <vaadin-grid id="grid" items="[[foods]]" frozen-columns="1" selection-mode="single" visible-rows="10" on-sort-order-changed="_sortOrderChanged"
-      on-selected-items-changed="_selectedChanged">
-      <table>
-        <colgroup>
-          <col name="t" flex="2" sortable resizable sort-direction="asc">
-          <col name="n.6" sortable flex="1" resizable>
-          <col name="n.1" sortable flex="1" resizable>
-          <col name="n.0" sortable flex="1" resizable>
-          <col name="n.4" sortable flex="1" resizable>
-          <template is="dom-repeat" items="{{cols}}" as="col">
-            <col name$="[[col]]" sortable hidable flex="1" resizable hidden>
-          </template>
-        </colgroup>
-        <thead>
-          <tr>
-            <th>Produkt</th>
-            <th>kcal</th>
-            <th>Tłuszcz (g)</th>
-            <th>Białko (g)</th>
-            <th>Węglowodany (g)</th>
-            <th>Cukry (g)</th>
-            <th>Błonnik (g)</th>
-            <th>Tłuszcz nas. (g)</th>
-            <th>Tłuszcz trans. (g)</th>
-            <th>Cholesterol (mg)</th>
-            <th>Sód (mg)</th>
-            <th>Wapń (mg)</th>
-            <th>Żelazo (mg)</th>
-            <th>Magnez (mg)</th>
-            <th>Fosfor (mg)</th>
-            <th>Potas (mg)</th>
-            <th>Cynk (mg)</th>
-            <th>Miedź (mg)</th>
-            <th>Fluor (ug)</th>
-            <th>Mangan (mg)</th>
-            <th>Selen (ug)</th>
-            <th>Witamin A, RAE (ug)</th>
-            <th>Beta-karoten (ug)</th>
-            <th>Witamina E (mg)</th>
-            <th>Witamina D (ug)</th>
-            <th>Witaminca C (mg)</th>
-            <th>Tiamina, B1 (mg)</th>
-            <th>Ryboflawina, B2 (mg)</th>
-            <th>Niacyna, B3 (mg)</th>
-            <th>Kwas pantotenowy (mg)</th>
-            <th>Witamina B6 (mg)</th>
-            <th>Foliany (ug)</th>
-            <th>Witamina B12 (ug)</th>
-            <th>Witamina K (ug)</th>
-            <th>Cholina (mg)</th>
-            <th>Woda (g)</th>
-            <th>Alkohol (g)</th>
-            <th>Kofeina (mg)</th>
-            <th>Likopen (ug)</th>
-            <th>Luteina (ug)</th>
-          </tr>
-        </thead>
-      </table>
+    <vaadin-grid id="grid" items="[[foods]]" active-item="{{activeItem}}">
+      <vaadin-grid-column frozen resizable width="200px">
+        <template class="header">
+          <vaadin-grid-sorter path="t" direction="asc">Produkt</vaadin-grid-sorter>
+          <vaadin-grid-filter path="t" value="{{_productFilter}}">
+            <paper-input label="Filtruj produkty" value="{{_productFilter}}"></paper-input>
+          </vaadin-grid-filter>
+        </template>
+        <template>[[item.t]]</template>
+      </vaadin-grid-column>
+      <template is="dom-repeat" items="[[nutrients]]" as="nutrient">
+        <vaadin-grid-column resizable width="[[getColumWidth(nutrient.hidden)]]" hidden="[[nutrient.hidden]]">
+          <template class="header"><vaadin-grid-sorter path="[[nutrient.path]]">[[nutrient.name]]</vaadin-grid-sorter></template>
+          <template>[[formatAmount(item, nutrient.path)]]</template>
+        </vaadin-grid-column>
+      </template>
     </vaadin-grid>
+    <paper-fab icon="polydiet-icons:add" id="addFood" disabled="[[!isFoodSelected]]" on-tap="openAddFoodModal"></paper-fab>
+    <paper-dialog modal id="addSelectedFoodModal">
+      <h2>Dodaj produkt &quot;[[selectedFood.t]]&quot;</h2>
+      <p>
+        <paper-input label="Waga w gramach" type="number" placeholder="Wpisz wagę w gramach" id="addFoodQuantity" autofocus></paper-input>
+      </p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Anuluj</paper-button>
+        <paper-button dialog-confirm on-tap="addToList">Dodaj do listy tygodniowej</paper-button>
+      </div>
+    </paper-dialog>
   </template>
   <script>
     (function () {
-      var SORT_MAP = ['t', '6', '1', '0', '4', '5', '7', '2', '3'];
-      for (var i = 8; i <= 38; i++) {
-        SORT_MAP.push('' + i);
-      }
-
       Polymer({
         is: 'foods-grid',
+        behaviors: [GluBehaviors.Formatters],
         properties: {
+          nutrients: {
+            type: Array,
+            value: []
+          },
           foods: {
             type: Array,
             notify: true,
             value: []
           },
-          cols: {
-            type: Array,
-            value: SORT_MAP.slice(5).map(function (i) {
-              return 'n.' + i;
-            })
+          selectedFood: {
+            type: Object,
+            notify: true,
+            value: null
+          },
+          isFoodSelected: {
+            type: Boolean,
+            notify: true,
+            computed: '_isFoodSelected(selectedFood)'
+          },
+          activeItem: {
+            observer: '_activeItemChanged'
           }
         },
-        _sortOrderChanged: function (e) {
-          // do not bubble as we use own event for sorting changes
+        _isFoodSelected: function (selectedFood) {
+          return selectedFood !== null ? true : false;
+        },
+        _activeItemChanged: function (item) {
+          this.$.grid.selectedItems = item ? [item] : [];
+          this.selectedFood = item;
+        },
+        openAddFoodModal: function () {
+          this.$.addFoodQuantity.value = null;
+          this.$.addSelectedFoodModal.open();
+        },
+        addToList: function (e) {
+          // do not bubble as we use own event
           e.preventDefault();
           e.stopPropagation();
 
-          var grid = this.$.grid;
-          var idx = grid.sortOrder[0].column;
-          var dir = grid.sortOrder[0].direction === 'asc' ? '+' : '-';
-
-          this.fire('sort-changed', [SORT_MAP[idx], dir], {
-            bubbles: false
+          this.fire('add-to-list', {
+            amount: parseFloat(this.$.addFoodQuantity.value),
+            food: this.selectedFood
           });
-        },
-        _selectedChanged: function () {
-          var grid = this.$.grid,
-            selectedIds = grid.selection.selected(),
-            row = null;
-
-          if (selectedIds.length > 0) {
-            row = this.foods[selectedIds[0]];
-          }
-
-          this.fire('selected-changed', {
-            item: row
-          }, {
-            bubbles: false
-          });
-        },
-        resetSelected: function () {
-          this.$.grid.selection.clear();
+          this.$.grid.selectedItems = [];
+          this.$.addSelectedFoodModal.close();
         }
       });
     })();
