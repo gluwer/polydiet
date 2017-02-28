@@ -37,7 +37,7 @@
 /* eslint-disable indent, no-unused-vars, no-multiple-empty-lines, max-nested-callbacks, space-before-function-paren, quotes, comma-spacing */
 'use strict';
 
-var precacheConfig = [["/polydiet/bower_components/webcomponentsjs/webcomponents-lite.min.js","02395895d5d08242c6ba93518a6da2c5"],["/polydiet/data/foods.json","4d56801564e8a76ca80a164b0f9b9e2c"],["/polydiet/index.html","2668e552d32139123de9b3ad5fed75bc"],["/polydiet/manifest.json","f4dbf1b6f917f7be782733f5d0ad2a0f"],["/polydiet/src/glu-polydiet.html","184395389a38fe8e4de9d1fb1c27089f"]];
+var precacheConfig = [["/polydiet/bower_components/webcomponentsjs/webcomponents-lite.min.js","02395895d5d08242c6ba93518a6da2c5"],["/polydiet/data/foods.json","8f584867d84e911a7bb0d72267d2ff31"],["/polydiet/index.html","2668e552d32139123de9b3ad5fed75bc"],["/polydiet/manifest.json","f4dbf1b6f917f7be782733f5d0ad2a0f"],["/polydiet/src/glu-polydiet.html","dfcc730a3f9f9cbdcbc2b6b3ddb78aaa"]];
 var cacheName = 'sw-precache-v2--' + (self.registration ? self.registration.scope : '');
 
 
