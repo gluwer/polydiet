@@ -237,20 +237,44 @@
         goal: 3,
         hidden: true,
         id: 38
+      },
+            {
+        name: 'Tłuszcz nienas. (g)',
+        goal: 60,
+        hidden: true,
+        id: 39
+      },
+      {
+        name: 'Tłuszcz wielonie. (g)',
+        goal: 20,
+        hidden: true,
+        id: 40
+      },
+      {
+        name: 'Tłuszcz n-3 (g)',
+        goal: 10,
+        hidden: true,
+        id: 41
+      },
+      {
+        name: 'Tłuszcz n-6 (g)',
+        goal: 10,
+        hidden: true,
+        id: 42
       }
     ];
 
-  /**
-   * @polymerBehavior GluBehaviors.Nutrients
-   */
+    /**
+     * @polymerBehavior GluBehaviors.Nutrients
+     */
     GluBehaviors.Nutrients = {
       properties: {
         nutrients: {
           type: Array,
           notify: true,
-          value: NUTRIENTS.map(function(n, i) {
-            n.path = 'n.'+ n.id;
-            n.sumPath = '' + (i+2);
+          value: NUTRIENTS.map(function (n, i) {
+            n.path = 'n.' + n.id;
+            n.sumPath = '' + (n.id + 1);
             n.weeklyGoal = n.goal * 7
             return n;
           }),

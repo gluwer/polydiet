@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="shared/polydiet-icons.html">
 <link rel="import" href="shared/formatters-behavior.html">
 <link rel="import" href="shared/shared-styles.html">
@@ -16,9 +17,13 @@
       #deleteProducts {
         margin: 1rem;
       }
+      
+      .amountInput {
+        border: 0;
+      }
     </style>
     <vaadin-grid id="grid" items="[[products]]" selected-items="{{selectedItems}}">
-      <vaadin-grid-selection-column frozen aut-select></vaadin-grid-selection-column>
+      <vaadin-grid-selection-column frozen auto-select></vaadin-grid-selection-column>
       <vaadin-grid-column frozen resizable width="200px">
         <template class="header">
           <vaadin-grid-sorter path="t" direction="asc">Produkt</vaadin-grid-sorter>
@@ -28,34 +33,35 @@
           Suma:
         </template>
       </vaadin-grid-column>
-      <vaadin-grid-column frozen resizable width="80px">
+      <vaadin-grid-column frozen resizable width="90px">
         <template class="header">
           <vaadin-grid-sorter path="a">Porcja (g)</vaadin-grid-sorter>
         </template>
-        <template>[[formatAmount(item, "a")]]</template>
+        <template>
+          <input value$="[[item.a]]" type="number" class="amountInput" on-change="_handleInput" itemid="[[item.id]]"></input>
+        </template>
         <template class="footer">
           [[formatAmount(sums, "1")]]
         </template>
       </vaadin-grid-column>
       <template is="dom-repeat" items="[[nutrients]]" as="nutrient">
-        <vaadin-grid-column resizable width="[[getColumWidth(nutrient.hidden)]]" hidden="[[nutrient.hidden]]">
-          <template class="header"><vaadin-grid-sorter path="[[nutrient.path]]">[[nutrient.name]]</vaadin-grid-sorter></template>
-          <template>[[formatAmount(item, nutrient.path)]]</template>
-          <template class="footer">
-            <glu-progress text="[[formatAmount(sums, nutrient.sumPath)]]" current="[[get(nutrient.sumPath, sums)]]" limit="[[nutrient.weeklyGoal]]"></glu-progress>
-          </template>
-        </vaadin-grid-column>
+        <template is="dom-if" if="[[!nutrient.hidden]]" restamp>
+          <vaadin-grid-column resizable width="[[getColumWidth(nutrient.hidden)]]">
+            <template class="header">
+              <vaadin-grid-sorter path="[[nutrient.path]]">[[nutrient.name]]</vaadin-grid-sorter>
+            </template>
+            <template>[[formatAmount(item, nutrient.path)]]</template>
+            <template class="footer">
+              <glu-progress text="[[formatAmount(sums, nutrient.sumPath)]]" current="[[get(nutrient.sumPath, sums)]]" limit="[[nutrient.weeklyGoal]]"></glu-progress>
+            </template>
+          </vaadin-grid-column>
+        </template>
       </template>
     </vaadin-grid>
     <paper-fab icon="polydiet-icons:delete" id="deleteProducts" disabled="[[!isProductSelected]]" on-tap="removeSelected"></paper-fab>
   </template>
   <script>
     (function () {
-      var VALUES_MAP = ['t', 'a', '6', '1', '0', '4', '5', '7', '2', '3'];
-      for (var i = 8; i <= 38; i++) {
-        VALUES_MAP.push('' + i);
-      }
-
       Polymer({
         is: 'weekly-grid',
         properties: {
@@ -69,9 +75,7 @@
           },
           sums: {
             type: Array,
-            value: VALUES_MAP.map(function (i) {
-              return 0;
-            })
+            value: []
           },
           isProductSelected: {
             type: Boolean,
@@ -85,32 +89,19 @@
           }
         },
         behaviors: [GluBehaviors.Formatters],
-        observers: [
-          'recalculateSums(products.*)'
-        ],
-        recalculateSums: function (products) {
-          this.sums = VALUES_MAP.map(function (id, index) {
-            if (id === 't') return 0;
-
-            var sum = products.base.reduce(function (sum, product) {
-              var value = -1;
-
-              switch (id) {
-                case 'a':
-                  value = product[id];
-                  break;
-                default:
-                  value = product.n[id];
-              }
-
-              return value > 0 ? sum + value : sum;
-            }, 0);
-
-            return sum;
-          });
-        },
         _isProductSelected: function (rows) {
           return rows.base.length > 0 ? true : false;
+        },
+        _handleInput: function (e) {
+          console.log(e.target.value);
+          var value = parseInt(e.target.value, 10);
+
+          if (!Number.isNaN(value) && value > 0) {
+            this.fire('amount-updated', {
+              id: e.target.itemid,
+              value: value
+            });
+          }
         },
         removeSelected: function (e) {
           var selectedRows = this.$.grid.selectedItems;

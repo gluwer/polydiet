@@ -1,0 +1,55 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared/glu-progress.html">
+<link rel="import" href="shared/formatters-behavior.html">
+<dom-module id="weekly-stats">
+  <template>
+    <style>
+       :host {
+        display: block;
+      }
+      
+      .columns {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      
+      .element {
+        box-sizing: border-box;
+        width: 25%;
+        padding: 5px 10px;
+      }
+
+      h4 {
+        margin: 10px 0 0 0;
+      }
+    </style>
+    <div class="columns">
+      <template is="dom-repeat" items="[[nutrients]]" as="nutrient">
+        <div class="element">
+          <h4>[[nutrient.name]]</h4>
+          <glu-progress text="[[formatAmount(sums, nutrient.sumPath)]]/[[formatAmount(nutrient, 'weeklyGoal')]]" current="[[get(nutrient.sumPath, sums)]]"
+            limit="[[nutrient.weeklyGoal]]"></glu-progress>
+      </template>
+      </div>
+  </template>
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+        is: 'weekly-stats',
+        properties: {
+          nutrients: {
+            type: Array,
+            value: []
+          },
+          sums: {
+            type: Array,
+            value: []
+          }
+        },
+        behaviors: [GluBehaviors.Formatters]
+      });
+    })();
+  </script>
+</dom-module>

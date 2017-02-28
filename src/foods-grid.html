@@ -17,12 +17,12 @@
       #addFood {
         margin: 1rem;
       }
-
+      
       #grid {
-          --vaadin-grid-header-cell: {
-            height: 85px;
-          }
+        --vaadin-grid-header-cell: {
+          height: 85px;
         }
+      }
     </style>
     <vaadin-grid id="grid" items="[[foods]]" active-item="{{activeItem}}">
       <vaadin-grid-column frozen resizable width="200px">
@@ -35,10 +35,14 @@
         <template>[[item.t]]</template>
       </vaadin-grid-column>
       <template is="dom-repeat" items="[[nutrients]]" as="nutrient">
-        <vaadin-grid-column resizable width="[[getColumWidth(nutrient.hidden)]]" hidden="[[nutrient.hidden]]">
-          <template class="header"><vaadin-grid-sorter path="[[nutrient.path]]">[[nutrient.name]]</vaadin-grid-sorter></template>
-          <template>[[formatAmount(item, nutrient.path)]]</template>
-        </vaadin-grid-column>
+        <template is="dom-if" if="[[!nutrient.hidden]]" restamp>
+          <vaadin-grid-column resizable width="[[getColumWidth(nutrient.hidden)]]">
+            <template class="header">
+              <vaadin-grid-sorter path="[[nutrient.path]]">[[nutrient.name]]</vaadin-grid-sorter>
+            </template>
+            <template>[[formatAmount(item, nutrient.path)]]</template>
+          </vaadin-grid-column>
+        </template>
       </template>
     </vaadin-grid>
     <paper-fab icon="polydiet-icons:add" id="addFood" disabled="[[!isFoodSelected]]" on-tap="openAddFoodModal"></paper-fab>

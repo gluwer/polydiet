@@ -12,8 +12,8 @@
 <link rel="import" href="shared/nutrients-behavior.html">
 <link rel="import" href="foods-grid.html">
 <link rel="import" href="weekly-grid.html">
+<link rel="import" href="weekly-stats.html">
 <link rel="import" href="pd-data.html">
-
 <dom-module id="glu-polydiet">
   <template>
     <style include="shared-styles">
@@ -40,7 +40,7 @@
       app-header {
         z-index: 1;
       }
-
+      
       #tabs {
         margin-bottom: 10px;
       }
@@ -72,14 +72,15 @@
         </paper-tabs>
         <iron-pages selected="{{selectedTab}}">
           <div>
-            <weekly-grid id="weeklyList" nutrients="[[nutrients]]" products="[[weeklyProducts]]" on-remove-used="removeFoodsFromList">
+            <weekly-grid id="weeklyList" nutrients="[[nutrients]]" products="[[weeklyProducts]]" sums="[[sums]]" on-remove-used="removeFoodsFromList"
+              on-amount-updated="updateAmount">
               </foods-grid>
           </div>
           <div>
             <foods-grid id="foodsList" foods="[[foods]]" nutrients="[[nutrients]]" on-add-to-list="addFoodToList"></foods-grid>
           </div>
           <div>
-            <p>Statystyki w trakcie realizacji</p>
+            <weekly-stats nutrients="[[nutrients]]" sums="[[sums]]" id="weeklyStats"></weekly-stats>
           </div>
         </iron-pages>
       </section>
@@ -105,11 +106,34 @@
           type: Array,
           notify: true,
           value: []
-        }
+        },
+        sums: {
+          type: Array,
+          value: Array.apply(null, {
+            length: 44
+          }).map(function () {
+            return 0;
+          })
+        },
       },
       behaviors: [GluBehaviors.Nutrients],
-      _recalculateValues: function (foodWithAmount) {
-        var factor = foodWithAmount.a / 100;
+      observers: [
+        'recalculateSums(weeklyProducts.*)'
+      ],
+      recalculateSums: function (products) {
+        if (!this.sums) return;
+
+        this.sums = this.sums.map(function (id, index) {
+          var sum = products.base.reduce(function (sum, product) {
+            var value = index === 0 ? product.a : product.n[index - 1];
+
+            return value > 0 ? sum + value : sum;
+          }, 0);
+
+          return sum;
+        });
+      },
+      _recalculateValues: function (foodWithAmount, factor) {
         foodWithAmount.n = foodWithAmount.n.map(function (n) {
           return n > 0 ? factor * n : n;
         });
@@ -133,9 +157,21 @@
           foodWithAmount = Object.assign({}, data.food, {
             a: data.amount
           });
-          this._recalculateValues(foodWithAmount);
+          this._recalculateValues(foodWithAmount, foodWithAmount.a / 100);
           this.push("weeklyProducts", foodWithAmount);
         }
+      },
+      updateAmount: function (e, data) {
+        var existingFood,
+          foodId;
+
+        existingFood = this.weeklyProducts.filter(function (f) {
+          return f.id === data.id;
+        })[0];
+
+        this._recalculateValues(existingFood, data.value / existingFood.a);
+        existingFood.a = data.value;
+        this.notifyPath(["weeklyProducts", this.weeklyProducts.indexOf(existingFood), "n"]);
       },
       removeFoodsFromList: function (e, data) {
         data.products.forEach(function (food) {
