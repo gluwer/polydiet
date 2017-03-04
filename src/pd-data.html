@@ -7,6 +7,266 @@
   </template>
   <script>
     (function () {
+      var NUTRIENTS = [{
+          name: 'kcal',
+          goal: 1585,
+          hidden: false,
+          id: 6,
+        },
+        {
+          name: 'Tłuszcz (g)',
+          goal: 120,
+          hidden: false,
+          id: 1
+        },
+        {
+          name: 'Białko (g)',
+          goal: 80,
+          hidden: false,
+          id: 0
+        },
+        {
+          name: 'Węglowodany (g)',
+          goal: 50,
+          hidden: false,
+          id: 4
+        },
+        {
+          name: 'Alkohol (g)',
+          goal: 0,
+          hidden: true,
+          id: 35
+        },
+        {
+          name: 'Beta-karoten (ug)',
+          goal: 2000,
+          hidden: true,
+          id: 21
+        },
+        {
+          name: 'Błonnik (g)',
+          goal: 30,
+          hidden: true,
+          id: 7
+        },
+        {
+          name: 'Cholesterol (mg)',
+          goal: 400,
+          hidden: true,
+          id: 8
+        },
+        {
+          name: 'Cholina (mg)',
+          goal: 550,
+          hidden: true,
+          id: 33
+        },
+        {
+          name: 'Cukry (g)',
+          goal: 10,
+          hidden: true,
+          id: 5
+        },
+        {
+          name: 'Cynk (mg)',
+          goal: 11,
+          hidden: true,
+          id: 15
+        },
+        {
+          name: 'Fluor (ug)',
+          goal: 4,
+          hidden: true,
+          id: 17
+        },
+        {
+          name: 'Foliany (ug)',
+          goal: 400,
+          hidden: true,
+          id: 30
+        },
+        {
+          name: 'Fosfor (mg)',
+          goal: 700,
+          hidden: true,
+          id: 13
+        },
+        {
+          name: 'Kofeina (mg)',
+          goal: 0,
+          hidden: true,
+          id: 36
+        },
+        {
+          name: 'Kwas pantotenowy (mg)',
+          goal: 5,
+          hidden: true,
+          id: 28
+        },
+        {
+          name: 'Likopen (ug)',
+          goal: 3.5,
+          hidden: true,
+          id: 37
+        },
+        {
+          name: 'Luteina (ug)',
+          goal: 3,
+          hidden: true,
+          id: 38
+        },
+        {
+          name: 'Magnez (mg)',
+          goal: 420,
+          hidden: true,
+          id: 12
+        },
+        {
+          name: 'Mangan (mg)',
+          goal: 2,
+          hidden: true,
+          id: 18
+        },
+        {
+          name: 'Miedź (mg)',
+          goal: 0.9,
+          hidden: true,
+          id: 16
+        },
+        {
+          name: 'Niacyna, B3 (mg)',
+          goal: 16,
+          hidden: true,
+          id: 27
+        },
+        {
+          name: 'Potas (mg)',
+          goal: 4700,
+          hidden: true,
+          id: 14
+        },
+        {
+          name: 'Ryboflawina, B2 (mg)',
+          goal: 1.3,
+          hidden: true,
+          id: 26
+        },
+        {
+          name: 'Selen (ug)',
+          goal: 55,
+          hidden: true,
+          id: 19
+        },
+        {
+          name: 'Sód (mg)',
+          goal: 2300,
+          hidden: true,
+          id: 9
+        },
+        {
+          name: 'Tiamina, B1 (mg)',
+          goal: 1.3,
+          hidden: true,
+          id: 25
+        },
+        {
+          name: 'Tłuszcz nas. (g)',
+          goal: 40,
+          hidden: true,
+          id: 2
+        },
+        {
+          name: 'Tłuszcz trans. (g)',
+          goal: 0,
+          hidden: true,
+          id: 3
+        },
+        {
+          name: 'Tłuszcz nienas. (g)',
+          goal: 60,
+          hidden: true,
+          id: 39
+        },
+        {
+          name: 'Tłuszcz n-3 (g)',
+          goal: 10,
+          hidden: true,
+          id: 41
+        },
+        {
+          name: 'Tłuszcz n-6 (g)',
+          goal: 10,
+          hidden: true,
+          id: 42
+        },
+        {
+          name: 'Tłuszcz wielonie. (g)',
+          goal: 20,
+          hidden: true,
+          id: 40
+        },
+        {
+          name: 'Wapń (mg)',
+          goal: 1000,
+          hidden: true,
+          id: 10
+        },
+        {
+          name: 'Witamin A, RAE (ug)',
+          goal: 900,
+          hidden: true,
+          id: 20
+        },
+        {
+          name: 'Witamina B6 (mg)',
+          goal: 1.4,
+          hidden: true,
+          id: 29
+        },
+        {
+          name: 'Witamina B12 (ug)',
+          goal: 2.4,
+          hidden: true,
+          id: 31
+        },
+        {
+          name: 'Witamina C (mg)',
+          goal: 90,
+          hidden: true,
+          id: 24
+        },
+        {
+          name: 'Witamina D (ug)',
+          goal: 15,
+          hidden: true,
+          id: 23
+        },
+        {
+          name: 'Witamina E (mg)',
+          goal: 10,
+          hidden: true,
+          id: 22
+        },
+        {
+          name: 'Witamina K (ug)',
+          goal: 65,
+          hidden: true,
+          id: 32
+        },
+        {
+          name: 'Woda (g)',
+          goal: 2000,
+          hidden: true,
+          id: 34
+        },
+        {
+          name: 'Żelazo (mg)',
+          goal: 10,
+          hidden: true,
+          id: 11
+        },
+      ];
+
       Polymer({
         is: 'pd-data',
         properties: {
@@ -19,6 +279,16 @@
             type: Array,
             value: [],
             notify: true
+          },
+          nutrients: {
+            type: Array,
+            notify: true,
+            value: NUTRIENTS.map(function (n, i) {
+              n.path = 'n.' + n.id;
+              n.sumPath = '' + (n.id + 1);
+              n.weeklyGoal = n.goal * 7
+              return n;
+            })
           }
         },
         handleResponse: function (e) {

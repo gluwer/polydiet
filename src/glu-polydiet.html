@@ -4,12 +4,9 @@
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
-<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
-<link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="shared/polydiet-icons.html">
 <link rel="import" href="shared/shared-styles.html">
-<link rel="import" href="shared/nutrients-behavior.html">
 <link rel="import" href="foods-grid.html">
 <link rel="import" href="weekly-grid.html">
 <link rel="import" href="weekly-stats.html">
@@ -44,24 +41,26 @@
       #tabs {
         margin-bottom: 10px;
       }
+
+      #nutrientsMenu {
+        list-style-type: none;
+        padding: 0.2rem 1rem;
+        margin: 0;
+      }
     </style>
-    <pd-data id="data" food-data="{{foods}}" weekly-products="{{weeklyProducts}}"></pd-data>
+    <pd-data id="data" food-data="{{foods}}" weekly-products="{{weeklyProducts}}" nutrients="{{nutrients}}"></pd-data>
     <div class="container">
       <app-header reveals>
         <app-toolbar>
-          <paper-menu-button>
-            <paper-icon-button icon="polydiet-icons:menu" class="dropdown-trigger"></paper-icon-button>
-            <paper-menu class="dropdown-content" id="nutrientsMenu">
-              <template is="dom-repeat" items="{{nutrients}}" as="nutrient">
-                <paper-item role="menuitemcheckbox">
-                  <paper-item-body>
-                    <paper-checkbox checked="{{!nutrient.hidden}}">[[nutrient.name]]</paper-checkbox>
-                  </paper-item-body>
-                </paper-item>
-              </template>
-            </paper-menu>
-          </paper-menu-button>
           <div main-title>PolyDiet</div>
+          <paper-menu-button horizontal-align="right">s
+            <paper-icon-button icon="polydiet-icons:view-column" class="dropdown-trigger" title="Wybierz kolumny do wyświetlenia"></paper-icon-button>
+            <ol class="dropdown-content" id="nutrientsMenu">
+              <template is="dom-repeat" items="{{nutrients}}" as="nutrient">
+                <li><paper-checkbox checked="{{!nutrient.hidden}}">[[nutrient.name]]</paper-checkbox></li>
+              </template>
+            </ol>
+          </paper-menu-button>
         </app-toolbar>
       </app-header>
       <section role="main" id="mainSection">
@@ -70,10 +69,10 @@
           <paper-tab>Produkty</paper-tab>
           <paper-tab>Statystyki</paper-tab>
         </paper-tabs>
-        <iron-pages selected="{{selectedTab}}">
+        <iron-pages selected="[[selectedTab]]">
           <div>
             <weekly-grid id="weeklyList" nutrients="[[nutrients]]" products="[[weeklyProducts]]" sums="[[sums]]" on-remove-used="removeFoodsFromList"
-              on-amount-updated="updateAmount">
+              on-amount-updated="updateAmount" on-title-updated="updateTitle" on-recipe-used="createRecipe">
               </foods-grid>
           </div>
           <div>
@@ -107,6 +106,10 @@
           notify: true,
           value: []
         },
+        nutrients: {
+          type: Array,
+          notify: true
+        },
         sums: {
           type: Array,
           value: Array.apply(null, {
@@ -116,10 +119,19 @@
           })
         },
       },
-      behaviors: [GluBehaviors.Nutrients],
       observers: [
         'recalculateSums(weeklyProducts.*)'
       ],
+      _recalculateValues: function (foodWithAmount, factor) {
+        foodWithAmount.n = foodWithAmount.n.map(function (n) {
+          return n > 0 ? factor * n : n;
+        });
+      },
+      _findById: function (id) {
+        return this.weeklyProducts.filter(function (f) {
+          return f.id === id;
+        });
+      },
       recalculateSums: function (products) {
         if (!this.sums) return;
 
@@ -133,25 +145,19 @@
           return sum;
         });
       },
-      _recalculateValues: function (foodWithAmount, factor) {
-        foodWithAmount.n = foodWithAmount.n.map(function (n) {
-          return n > 0 ? factor * n : n;
-        });
-      },
-
       addFoodToList: function (e, data) {
         var foodWithAmount,
           existingFood;
 
         if (data.amount > 0) {
-          existingFood = this.weeklyProducts.filter(function (f) {
-            return f.id === data.food.id;
-          });
 
-          if (existingFood.length > 0) {
-            data.amount += existingFood[0].a;
-            // remove existing, as it is easy to force mutation changes
-            this.splice('weeklyProducts', this.weeklyProducts.indexOf(existingFood[0]), 1);
+          if (!data.allowDuplicates) {
+            existingFood = this._findById(data.food.id);
+
+            if (existingFood.length > 0) {
+              data.amount += existingFood[0].a;
+              this.splice('weeklyProducts', this.weeklyProducts.indexOf(existingFood[0]), 1);
+            }
           }
 
           foodWithAmount = Object.assign({}, data.food, {
@@ -165,13 +171,19 @@
         var existingFood,
           foodId;
 
-        existingFood = this.weeklyProducts.filter(function (f) {
-          return f.id === data.id;
-        })[0];
+        existingFood = this._findById(data.id)[0];
 
         this._recalculateValues(existingFood, data.value / existingFood.a);
         existingFood.a = data.value;
         this.notifyPath(["weeklyProducts", this.weeklyProducts.indexOf(existingFood), "n"]);
+      },
+      updateTitle: function (e, data) {
+        var existingFood;
+
+        existingFood = this._findById(data.id)[0];
+
+        existingFood.t = data.value;
+        this.notifyPath(["weeklyProducts", this.weeklyProducts.indexOf(existingFood), "t"]);
       },
       removeFoodsFromList: function (e, data) {
         data.products.forEach(function (food) {
@@ -182,6 +194,24 @@
             }
           }
         }.bind(this));
+      },
+      createRecipe: function (e, data) {
+        var newRecipe = data.products.reduce(function(acc, food, index) {
+          acc.t += (index ? ", " : "") + food.t;
+          acc.a += food.a;
+          acc.n = acc.n.map(function(v, i) {
+            return v === -1 ? food.n[i] : v + food.n[i];
+          });
+          return acc;
+        }, {
+          id: '_' + Date.now(),
+          t: "Przepis: ",
+          a: 0,
+          n: this.nutrients.map(function() { return -1; })
+        });
+
+        this.removeFoodsFromList(undefined, data);
+        this.push("weeklyProducts", newRecipe);
       }
     });
   </script>

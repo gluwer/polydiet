@@ -1,9 +1,12 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-filter.html">
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-sorter.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="shared/polydiet-icons.html">
 <link rel="import" href="shared/shared-styles.html">
 <link rel="import" href="shared/formatters-behavior.html">
@@ -19,6 +22,7 @@
       }
       
       #grid {
+        height: var(--grid-height);
         --vaadin-grid-header-cell: {
           height: 85px;
         }
@@ -36,7 +40,7 @@
       </vaadin-grid-column>
       <template is="dom-repeat" items="[[nutrients]]" as="nutrient">
         <template is="dom-if" if="[[!nutrient.hidden]]" restamp>
-          <vaadin-grid-column resizable width="[[getColumWidth(nutrient.hidden)]]">
+          <vaadin-grid-column resizable width="150px">
             <template class="header">
               <vaadin-grid-sorter path="[[nutrient.path]]">[[nutrient.name]]</vaadin-grid-sorter>
             </template>
@@ -45,11 +49,16 @@
         </template>
       </template>
     </vaadin-grid>
-    <paper-fab icon="polydiet-icons:add" id="addFood" disabled="[[!isFoodSelected]]" on-tap="openAddFoodModal"></paper-fab>
+    <div class="grid-actions">
+      <paper-fab icon="polydiet-icons:add" id="addFood" disabled="[[!isFoodSelected]]" on-tap="openAddFoodModal" title="Dodaj zaznaczony produkt do tygodniówki"></paper-fab>
+    </div>
     <paper-dialog modal id="addSelectedFoodModal">
       <h2>Dodaj produkt &quot;[[selectedFood.t]]&quot;</h2>
       <p>
         <paper-input label="Waga w gramach" type="number" placeholder="Wpisz wagę w gramach" id="addFoodQuantity" autofocus></paper-input>
+      </p>
+      <p>
+        <paper-checkbox id="addFoodAllowDuplicates" checked>Pozwól na duplikat</paper-input>
       </p>
       <div class="buttons">
         <paper-button dialog-dismiss>Anuluj</paper-button>
@@ -95,6 +104,7 @@
         },
         openAddFoodModal: function () {
           this.$.addFoodQuantity.value = null;
+          this.$.addFoodAllowDuplicates.checked = false;
           this.$.addSelectedFoodModal.open();
         },
         addToList: function (e) {
@@ -104,9 +114,11 @@
 
           this.fire('add-to-list', {
             amount: parseFloat(this.$.addFoodQuantity.value),
-            food: this.selectedFood
+            food: this.selectedFood,
+            allowDuplicates: this.$.addFoodAllowDuplicates.checked
           });
           this.$.grid.selectedItems = [];
+          this.selectedFood = null;
           this.$.addSelectedFoodModal.close();
         }
       });

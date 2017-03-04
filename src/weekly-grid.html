@@ -1,8 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-sorter.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="shared/polydiet-icons.html">
 <link rel="import" href="shared/formatters-behavior.html">
 <link rel="import" href="shared/shared-styles.html">
@@ -14,31 +16,43 @@
         display: block;
       }
       
-      #deleteProducts {
+      .grid-actions paper-fab {
         margin: 1rem;
+        margin-left: 0;
       }
       
-      .amountInput {
+      .amountInput,
+      .titleInput {
         border: 0;
+        font: inherit;
+        background: transparent;
+      }
+      
+      #grid {
+        height: var(--grid-height);
       }
     </style>
     <vaadin-grid id="grid" items="[[products]]" selected-items="{{selectedItems}}">
-      <vaadin-grid-selection-column frozen auto-select></vaadin-grid-selection-column>
+      <vaadin-grid-selection-column frozen auto-select>
+        <template class="header"></template>
+        <template>
+          <paper-checkbox checked="{{selected::change}}" aria-label="Zaznacz wiersz"></paper-input>
+        </template>
+      </vaadin-grid-selection-column>
       <vaadin-grid-column frozen resizable width="200px">
         <template class="header">
           <vaadin-grid-sorter path="t" direction="asc">Produkt</vaadin-grid-sorter>
         </template>
-        <template>[[item.t]]</template>
+        <template><input value="[[item.t]]" on-change="_handleTitleInput" class="titleInput" itemid="[[item.id]]"></input>
+        </template>
         <template class="footer">
           Suma:
         </template>
       </vaadin-grid-column>
       <vaadin-grid-column frozen resizable width="90px">
-        <template class="header">
-          <vaadin-grid-sorter path="a">Porcja (g)</vaadin-grid-sorter>
-        </template>
+        <template class="header">Porcja (g)</template>
         <template>
-          <input value$="[[item.a]]" type="number" class="amountInput" on-change="_handleInput" itemid="[[item.id]]"></input>
+          <input value$="[[item.a]]" type="number" class="amountInput" on-change="_handleAmountInput" itemid="[[item.id]]"></input>
         </template>
         <template class="footer">
           [[formatAmount(sums, "1")]]
@@ -46,7 +60,7 @@
       </vaadin-grid-column>
       <template is="dom-repeat" items="[[nutrients]]" as="nutrient">
         <template is="dom-if" if="[[!nutrient.hidden]]" restamp>
-          <vaadin-grid-column resizable width="[[getColumWidth(nutrient.hidden)]]">
+          <vaadin-grid-column resizable width="150px">
             <template class="header">
               <vaadin-grid-sorter path="[[nutrient.path]]">[[nutrient.name]]</vaadin-grid-sorter>
             </template>
@@ -58,7 +72,10 @@
         </template>
       </template>
     </vaadin-grid>
-    <paper-fab icon="polydiet-icons:delete" id="deleteProducts" disabled="[[!isProductSelected]]" on-tap="removeSelected"></paper-fab>
+    <div class="grid-actions">
+      <paper-fab icon="polydiet-icons:receipt" id="createReceipt" disabled="[[!isMultipleProductsSelected]]" on-tap="createReceiptFromSelected" title="Utwórz z zaznaczonych przepis"></paper-fab>
+      <paper-fab icon="polydiet-icons:delete" id="deleteProducts" disabled="[[!isProductSelected]]" on-tap="removeSelected" title="Usuń zaznaczone"></paper-fab>
+    </div>
   </template>
   <script>
     (function () {
@@ -82,6 +99,11 @@
             notify: true,
             computed: '_isProductSelected(selectedItems.*)'
           },
+          isMultipleProductsSelected: {
+            type: Boolean,
+            notify: true,
+            computed: '_isMultipleProductsSelected(selectedItems.*)'
+          },
           selectedItems: {
             type: Array,
             value: [],
@@ -89,11 +111,23 @@
           }
         },
         behaviors: [GluBehaviors.Formatters],
-        _isProductSelected: function (rows) {
-          return rows.base.length > 0 ? true : false;
+        _isProductSelected: function (selectedItems) {
+          return selectedItems.base.length > 0 ? true : false;
         },
-        _handleInput: function (e) {
-          console.log(e.target.value);
+        _isMultipleProductsSelected: function (selectedItems) {
+          return selectedItems.base.length >= 2 ? true : false;
+        },
+        _handleTitleInput: function (e) {
+          var value = e.target.value;
+
+          if (value.length > 0) {
+            this.fire('title-updated', {
+              id: e.target.itemid,
+              value: value
+            });
+          }
+        },
+        _handleAmountInput: function (e) {
           var value = parseInt(e.target.value, 10);
 
           if (!Number.isNaN(value) && value > 0) {
@@ -109,6 +143,15 @@
           this.$.grid.selectedItems = [];
 
           this.fire('remove-used', {
+            products: selectedRows
+          });
+        },
+        createReceiptFromSelected: function (e) {
+          var selectedRows = this.$.grid.selectedItems;
+
+          this.$.grid.selectedItems = [];
+
+          this.fire('recipe-used', {
             products: selectedRows
           });
         }
