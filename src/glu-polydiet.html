@@ -1259,250 +1259,7 @@ this.currentTarget=t,this.defaultPrevented=!1,this.eventPhase=Event.AT_TARGET,th
       
       #trigger {
         cursor: pointer;
-      }</style> <div id="trigger" on-tap="toggle"> <content select=".dropdown-trigger"></content> </div> <iron-dropdown id="dropdown" opened="{{opened}}" horizontal-align="[[horizontalAlign]]" vertical-align="[[verticalAlign]]" dynamic-align="[[dynamicAlign]]" horizontal-offset="[[horizontalOffset]]" vertical-offset="[[verticalOffset]]" no-overlap="[[noOverlap]]" open-animation-config="[[openAnimationConfig]]" close-animation-config="[[closeAnimationConfig]]" no-animations="[[noAnimations]]" focus-target="[[_dropdownContent]]" allow-outside-scroll="[[allowOutsideScroll]]" restore-focus-on-close="[[restoreFocusOnClose]]" on-iron-overlay-canceled="__onIronOverlayCanceled"> <div class="dropdown-content"> <content id="content" select=".dropdown-content"></content> </div> </iron-dropdown> </template> <script>!function(){"use strict";var e={ANIMATION_CUBIC_BEZIER:"cubic-bezier(.3,.95,.5,1)",MAX_ANIMATION_TIME_MS:400},n=Polymer({is:"paper-menu-button",behaviors:[Polymer.IronA11yKeysBehavior,Polymer.IronControlState],properties:{opened:{type:Boolean,value:!1,notify:!0,observer:"_openedChanged"},horizontalAlign:{type:String,value:"left",reflectToAttribute:!0},verticalAlign:{type:String,value:"top",reflectToAttribute:!0},dynamicAlign:{type:Boolean},horizontalOffset:{type:Number,value:0,notify:!0},verticalOffset:{type:Number,value:0,notify:!0},noOverlap:{type:Boolean},noAnimations:{type:Boolean,value:!1},ignoreSelect:{type:Boolean,value:!1},closeOnActivate:{type:Boolean,value:!1},openAnimationConfig:{type:Object,value:function(){return[{name:"fade-in-animation",timing:{delay:100,duration:200}},{name:"paper-menu-grow-width-animation",timing:{delay:100,duration:150,easing:e.ANIMATION_CUBIC_BEZIER}},{name:"paper-menu-grow-height-animation",timing:{delay:100,duration:275,easing:e.ANIMATION_CUBIC_BEZIER}}]}},closeAnimationConfig:{type:Object,value:function(){return[{name:"fade-out-animation",timing:{duration:150}},{name:"paper-menu-shrink-width-animation",timing:{delay:100,duration:50,easing:e.ANIMATION_CUBIC_BEZIER}},{name:"paper-menu-shrink-height-animation",timing:{duration:200,easing:"ease-in"}}]}},allowOutsideScroll:{type:Boolean,value:!1},restoreFocusOnClose:{type:Boolean,value:!0},_dropdownContent:{type:Object}},hostAttributes:{role:"group","aria-haspopup":"true"},listeners:{"iron-activate":"_onIronActivate","iron-select":"_onIronSelect"},get contentElement(){return Polymer.dom(this.$.content).getDistributedNodes()[0]},toggle:function(){this.opened?this.close():this.open()},open:function(){this.disabled||this.$.dropdown.open()},close:function(){this.$.dropdown.close()},_onIronSelect:function(e){this.ignoreSelect||this.close()},_onIronActivate:function(e){this.closeOnActivate&&this.close()},_openedChanged:function(e,n){e?(this._dropdownContent=this.contentElement,this.fire("paper-dropdown-open")):null!=n&&this.fire("paper-dropdown-close")},_disabledChanged:function(e){Polymer.IronControlState._disabledChanged.apply(this,arguments),e&&this.opened&&this.close()},__onIronOverlayCanceled:function(e){var n=e.detail,t=(Polymer.dom(n).rootTarget,this.$.trigger),o=Polymer.dom(n).path;o.indexOf(t)>-1&&e.preventDefault()}});Object.keys(e).forEach(function(t){n[t]=e[t]}),Polymer.PaperMenuButton=n}();</script> </dom-module> <dom-module id="paper-menu-shared-styles" assetpath="..\bower_components\paper-menu\"> <template> <style>/* need a wrapper element to make this higher specificity than the :host rule in paper-item */
-      .selectable-content > ::content > .iron-selected {
-        font-weight: bold;
-
-        @apply(--paper-menu-selected-item);
-      }
-
-      .selectable-content > ::content > [disabled] {
-        color: var(--paper-menu-disabled-color, --disabled-text-color);
-      }
-
-      .selectable-content > ::content > *:focus {
-        position: relative;
-        outline: 0;
-
-        @apply(--paper-menu-focused-item);
-      }
-
-      .selectable-content > ::content > *:focus:after {
-        @apply(--layout-fit);
-        background: currentColor;
-        opacity: var(--dark-divider-opacity);
-        content: '';
-        pointer-events: none;
-
-        @apply(--paper-menu-focused-item-after);
-      }
-
-      .selectable-content > ::content > *[colored]:focus:after {
-        opacity: 0.26;
-      }</style> </template> </dom-module> <dom-module id="paper-menu" assetpath="..\bower_components\paper-menu\"> <template> <style include="paper-menu-shared-styles"></style> <style>:host {
-        display: block;
-        padding: 8px 0;
-
-        background: var(--paper-menu-background-color, --primary-background-color);
-        color: var(--paper-menu-color, --primary-text-color);
-
-        @apply(--paper-menu);
-      }</style> <div class="selectable-content"> <content></content> </div> </template> <script>!function(){Polymer({is:"paper-menu",behaviors:[Polymer.IronMenuBehavior]})}();</script> </dom-module> <script>Polymer.PaperItemBehaviorImpl={hostAttributes:{role:"option",tabindex:"0"}},Polymer.PaperItemBehavior=[Polymer.IronButtonState,Polymer.IronControlState,Polymer.PaperItemBehaviorImpl];</script> <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic"> <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700"> <style is="custom-style">:root {
-
-    /* Shared Styles */
-    --paper-font-common-base: {
-      font-family: 'Roboto', 'Noto', sans-serif;
-      -webkit-font-smoothing: antialiased;
-    };
-
-    --paper-font-common-code: {
-      font-family: 'Roboto Mono', 'Consolas', 'Menlo', monospace;
-      -webkit-font-smoothing: antialiased;
-    };
-
-    --paper-font-common-expensive-kerning: {
-      text-rendering: optimizeLegibility;
-    };
-
-    --paper-font-common-nowrap: {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    };
-
-    /* Material Font Styles */
-
-    --paper-font-display4: {
-      @apply(--paper-font-common-base);
-      @apply(--paper-font-common-nowrap);
-
-      font-size: 112px;
-      font-weight: 300;
-      letter-spacing: -.044em;
-      line-height: 120px;
-    };
-
-    --paper-font-display3: {
-      @apply(--paper-font-common-base);
-      @apply(--paper-font-common-nowrap);
-
-      font-size: 56px;
-      font-weight: 400;
-      letter-spacing: -.026em;
-      line-height: 60px;
-    };
-
-    --paper-font-display2: {
-      @apply(--paper-font-common-base);
-
-      font-size: 45px;
-      font-weight: 400;
-      letter-spacing: -.018em;
-      line-height: 48px;
-    };
-
-    --paper-font-display1: {
-      @apply(--paper-font-common-base);
-
-      font-size: 34px;
-      font-weight: 400;
-      letter-spacing: -.01em;
-      line-height: 40px;
-    };
-
-    --paper-font-headline: {
-      @apply(--paper-font-common-base);
-
-      font-size: 24px;
-      font-weight: 400;
-      letter-spacing: -.012em;
-      line-height: 32px;
-    };
-
-    --paper-font-title: {
-      @apply(--paper-font-common-base);
-      @apply(--paper-font-common-nowrap);
-
-      font-size: 20px;
-      font-weight: 500;
-      line-height: 28px;
-    };
-
-    --paper-font-subhead: {
-      @apply(--paper-font-common-base);
-
-      font-size: 16px;
-      font-weight: 400;
-      line-height: 24px;
-    };
-
-    --paper-font-body2: {
-      @apply(--paper-font-common-base);
-
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 24px;
-    };
-
-    --paper-font-body1: {
-      @apply(--paper-font-common-base);
-
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 20px;
-    };
-
-    --paper-font-caption: {
-      @apply(--paper-font-common-base);
-      @apply(--paper-font-common-nowrap);
-
-      font-size: 12px;
-      font-weight: 400;
-      letter-spacing: 0.011em;
-      line-height: 20px;
-    };
-
-    --paper-font-menu: {
-      @apply(--paper-font-common-base);
-      @apply(--paper-font-common-nowrap);
-
-      font-size: 13px;
-      font-weight: 500;
-      line-height: 24px;
-    };
-
-    --paper-font-button: {
-      @apply(--paper-font-common-base);
-      @apply(--paper-font-common-nowrap);
-
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: 0.018em;
-      line-height: 24px;
-      text-transform: uppercase;
-    };
-
-    --paper-font-code2: {
-      @apply(--paper-font-common-code);
-
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 20px;
-    };
-
-    --paper-font-code1: {
-      @apply(--paper-font-common-code);
-
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 20px;
-    };
-
-  }</style> <dom-module id="paper-item-shared-styles" assetpath="..\bower_components\paper-item\"> <template> <style>:host, .paper-item {
-        display: block;
-        position: relative;
-        min-height: var(--paper-item-min-height, 48px);
-        padding: 0px 16px;
-      }
-
-      .paper-item {
-        @apply(--paper-font-subhead);
-        border:none;
-        outline: none;
-        background: white;
-        width: 100%;
-        text-align: left;
-      }
-
-      :host([hidden]), .paper-item[hidden] {
-        display: none !important;
-      }
-
-      :host(.iron-selected), .paper-item.iron-selected {
-        font-weight: var(--paper-item-selected-weight, bold);
-
-        @apply(--paper-item-selected);
-      }
-
-      :host([disabled]), .paper-item[disabled] {
-        color: var(--paper-item-disabled-color, --disabled-text-color);
-
-        @apply(--paper-item-disabled);
-      }
-
-      :host(:focus), .paper-item:focus {
-        position: relative;
-        outline: 0;
-
-        @apply(--paper-item-focused);
-      }
-
-      :host(:focus):before, .paper-item:focus:before {
-        @apply(--layout-fit);
-
-        background: currentColor;
-        content: '';
-        opacity: var(--dark-divider-opacity);
-        pointer-events: none;
-
-        @apply(--paper-item-focused-before);
-      }</style> </template> </dom-module> <dom-module id="paper-item" assetpath="..\bower_components\paper-item\"> <template> <style include="paper-item-shared-styles"></style> <style>:host {
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        @apply(--paper-font-subhead);
-
-        @apply(--paper-item);
-      }</style> <content></content> </template> <script>Polymer({is:"paper-item",behaviors:[Polymer.PaperItemBehavior]});</script> </dom-module> <script>Polymer.IronValidatableBehaviorMeta=null,Polymer.IronValidatableBehavior={properties:{validator:{type:String},invalid:{notify:!0,reflectToAttribute:!0,type:Boolean,value:!1},_validatorMeta:{type:Object},validatorType:{type:String,value:"validator"},_validator:{type:Object,computed:"__computeValidator(validator)"}},observers:["_invalidChanged(invalid)"],registered:function(){Polymer.IronValidatableBehaviorMeta=new Polymer.IronMeta({type:"validator"})},_invalidChanged:function(){this.invalid?this.setAttribute("aria-invalid","true"):this.removeAttribute("aria-invalid")},hasValidator:function(){return null!=this._validator},validate:function(a){return this.invalid=!this._getValidity(a),!this.invalid},_getValidity:function(a){return!this.hasValidator()||this._validator.validate(a)},__computeValidator:function(){return Polymer.IronValidatableBehaviorMeta&&Polymer.IronValidatableBehaviorMeta.byKey(this.validator)}};</script> <script>Polymer.IronFormElementBehavior={properties:{name:{type:String},value:{notify:!0,type:String},required:{type:Boolean,value:!1},_parentForm:{type:Object}},attached:function(){this.fire("iron-form-element-register")},detached:function(){this._parentForm&&this._parentForm.fire("iron-form-element-unregister",{target:this})}};</script> <script>Polymer.IronCheckedElementBehaviorImpl={properties:{checked:{type:Boolean,value:!1,reflectToAttribute:!0,notify:!0,observer:"_checkedChanged"},toggles:{type:Boolean,value:!0,reflectToAttribute:!0},value:{type:String,value:"on",observer:"_valueChanged"}},observers:["_requiredChanged(required)"],created:function(){this._hasIronCheckedElementBehavior=!0},_getValidity:function(e){return this.disabled||!this.required||this.checked},_requiredChanged:function(){this.required?this.setAttribute("aria-required","true"):this.removeAttribute("aria-required")},_checkedChanged:function(){this.active=this.checked,this.fire("iron-change")},_valueChanged:function(){void 0!==this.value&&null!==this.value||(this.value="on")}},Polymer.IronCheckedElementBehavior=[Polymer.IronFormElementBehavior,Polymer.IronValidatableBehavior,Polymer.IronCheckedElementBehaviorImpl];</script> <script>Polymer.PaperCheckedElementBehaviorImpl={_checkedChanged:function(){Polymer.IronCheckedElementBehaviorImpl._checkedChanged.call(this),this.hasRipple()&&(this.checked?this._ripple.setAttribute("checked",""):this._ripple.removeAttribute("checked"))},_buttonStateChanged:function(){Polymer.PaperRippleBehavior._buttonStateChanged.call(this),this.disabled||this.isAttached&&(this.checked=this.active)}},Polymer.PaperCheckedElementBehavior=[Polymer.PaperInkyFocusBehavior,Polymer.IronCheckedElementBehavior,Polymer.PaperCheckedElementBehaviorImpl];</script> <dom-module id="paper-checkbox" assetpath="..\bower_components\paper-checkbox\"> <template strip-whitespace=""> <style>:host {
+      }</style> <div id="trigger" on-tap="toggle"> <content select=".dropdown-trigger"></content> </div> <iron-dropdown id="dropdown" opened="{{opened}}" horizontal-align="[[horizontalAlign]]" vertical-align="[[verticalAlign]]" dynamic-align="[[dynamicAlign]]" horizontal-offset="[[horizontalOffset]]" vertical-offset="[[verticalOffset]]" no-overlap="[[noOverlap]]" open-animation-config="[[openAnimationConfig]]" close-animation-config="[[closeAnimationConfig]]" no-animations="[[noAnimations]]" focus-target="[[_dropdownContent]]" allow-outside-scroll="[[allowOutsideScroll]]" restore-focus-on-close="[[restoreFocusOnClose]]" on-iron-overlay-canceled="__onIronOverlayCanceled"> <div class="dropdown-content"> <content id="content" select=".dropdown-content"></content> </div> </iron-dropdown> </template> <script>!function(){"use strict";var e={ANIMATION_CUBIC_BEZIER:"cubic-bezier(.3,.95,.5,1)",MAX_ANIMATION_TIME_MS:400},n=Polymer({is:"paper-menu-button",behaviors:[Polymer.IronA11yKeysBehavior,Polymer.IronControlState],properties:{opened:{type:Boolean,value:!1,notify:!0,observer:"_openedChanged"},horizontalAlign:{type:String,value:"left",reflectToAttribute:!0},verticalAlign:{type:String,value:"top",reflectToAttribute:!0},dynamicAlign:{type:Boolean},horizontalOffset:{type:Number,value:0,notify:!0},verticalOffset:{type:Number,value:0,notify:!0},noOverlap:{type:Boolean},noAnimations:{type:Boolean,value:!1},ignoreSelect:{type:Boolean,value:!1},closeOnActivate:{type:Boolean,value:!1},openAnimationConfig:{type:Object,value:function(){return[{name:"fade-in-animation",timing:{delay:100,duration:200}},{name:"paper-menu-grow-width-animation",timing:{delay:100,duration:150,easing:e.ANIMATION_CUBIC_BEZIER}},{name:"paper-menu-grow-height-animation",timing:{delay:100,duration:275,easing:e.ANIMATION_CUBIC_BEZIER}}]}},closeAnimationConfig:{type:Object,value:function(){return[{name:"fade-out-animation",timing:{duration:150}},{name:"paper-menu-shrink-width-animation",timing:{delay:100,duration:50,easing:e.ANIMATION_CUBIC_BEZIER}},{name:"paper-menu-shrink-height-animation",timing:{duration:200,easing:"ease-in"}}]}},allowOutsideScroll:{type:Boolean,value:!1},restoreFocusOnClose:{type:Boolean,value:!0},_dropdownContent:{type:Object}},hostAttributes:{role:"group","aria-haspopup":"true"},listeners:{"iron-activate":"_onIronActivate","iron-select":"_onIronSelect"},get contentElement(){return Polymer.dom(this.$.content).getDistributedNodes()[0]},toggle:function(){this.opened?this.close():this.open()},open:function(){this.disabled||this.$.dropdown.open()},close:function(){this.$.dropdown.close()},_onIronSelect:function(e){this.ignoreSelect||this.close()},_onIronActivate:function(e){this.closeOnActivate&&this.close()},_openedChanged:function(e,n){e?(this._dropdownContent=this.contentElement,this.fire("paper-dropdown-open")):null!=n&&this.fire("paper-dropdown-close")},_disabledChanged:function(e){Polymer.IronControlState._disabledChanged.apply(this,arguments),e&&this.opened&&this.close()},__onIronOverlayCanceled:function(e){var n=e.detail,t=(Polymer.dom(n).rootTarget,this.$.trigger),o=Polymer.dom(n).path;o.indexOf(t)>-1&&e.preventDefault()}});Object.keys(e).forEach(function(t){n[t]=e[t]}),Polymer.PaperMenuButton=n}();</script> </dom-module> <script>Polymer.IronValidatableBehaviorMeta=null,Polymer.IronValidatableBehavior={properties:{validator:{type:String},invalid:{notify:!0,reflectToAttribute:!0,type:Boolean,value:!1},_validatorMeta:{type:Object},validatorType:{type:String,value:"validator"},_validator:{type:Object,computed:"__computeValidator(validator)"}},observers:["_invalidChanged(invalid)"],registered:function(){Polymer.IronValidatableBehaviorMeta=new Polymer.IronMeta({type:"validator"})},_invalidChanged:function(){this.invalid?this.setAttribute("aria-invalid","true"):this.removeAttribute("aria-invalid")},hasValidator:function(){return null!=this._validator},validate:function(a){return this.invalid=!this._getValidity(a),!this.invalid},_getValidity:function(a){return!this.hasValidator()||this._validator.validate(a)},__computeValidator:function(){return Polymer.IronValidatableBehaviorMeta&&Polymer.IronValidatableBehaviorMeta.byKey(this.validator)}};</script> <script>Polymer.IronFormElementBehavior={properties:{name:{type:String},value:{notify:!0,type:String},required:{type:Boolean,value:!1},_parentForm:{type:Object}},attached:function(){this.fire("iron-form-element-register")},detached:function(){this._parentForm&&this._parentForm.fire("iron-form-element-unregister",{target:this})}};</script> <script>Polymer.IronCheckedElementBehaviorImpl={properties:{checked:{type:Boolean,value:!1,reflectToAttribute:!0,notify:!0,observer:"_checkedChanged"},toggles:{type:Boolean,value:!0,reflectToAttribute:!0},value:{type:String,value:"on",observer:"_valueChanged"}},observers:["_requiredChanged(required)"],created:function(){this._hasIronCheckedElementBehavior=!0},_getValidity:function(e){return this.disabled||!this.required||this.checked},_requiredChanged:function(){this.required?this.setAttribute("aria-required","true"):this.removeAttribute("aria-required")},_checkedChanged:function(){this.active=this.checked,this.fire("iron-change")},_valueChanged:function(){void 0!==this.value&&null!==this.value||(this.value="on")}},Polymer.IronCheckedElementBehavior=[Polymer.IronFormElementBehavior,Polymer.IronValidatableBehavior,Polymer.IronCheckedElementBehaviorImpl];</script> <script>Polymer.PaperCheckedElementBehaviorImpl={_checkedChanged:function(){Polymer.IronCheckedElementBehaviorImpl._checkedChanged.call(this),this.hasRipple()&&(this.checked?this._ripple.setAttribute("checked",""):this._ripple.removeAttribute("checked"))},_buttonStateChanged:function(){Polymer.PaperRippleBehavior._buttonStateChanged.call(this),this.disabled||this.isAttached&&(this.checked=this.active)}},Polymer.PaperCheckedElementBehavior=[Polymer.PaperInkyFocusBehavior,Polymer.IronCheckedElementBehavior,Polymer.PaperCheckedElementBehaviorImpl];</script> <dom-module id="paper-checkbox" assetpath="..\bower_components\paper-checkbox\"> <template strip-whitespace=""> <style>:host {
         display: inline-block;
         white-space: nowrap;
         cursor: pointer;
@@ -1666,7 +1423,7 @@ this.currentTarget=t,this.defaultPrevented=!1,this.eventPhase=Event.AT_TARGET,th
       /* invalid state */
       #checkbox.invalid:not(.checked) {
         border-color: var(--paper-checkbox-error-color, var(--error-color));
-      }</style> <div id="checkboxContainer"> <div id="checkbox" class$="[[_computeCheckboxClass(checked, invalid)]]"> <div id="checkmark" class$="[[_computeCheckmarkClass(checked)]]"></div> </div> </div> <div id="checkboxLabel"><content></content></div> </template> <script>Polymer({is:"paper-checkbox",behaviors:[Polymer.PaperCheckedElementBehavior],hostAttributes:{role:"checkbox","aria-checked":!1,tabindex:0},properties:{ariaActiveAttribute:{type:String,value:"aria-checked"}},attached:function(){var e=this.getComputedStyleValue("--calculated-paper-checkbox-ink-size").trim();if("-1px"===e){var t=parseFloat(this.getComputedStyleValue("--calculated-paper-checkbox-size").trim()),a=Math.floor(8/3*t);a%2!==t%2&&a++,this.customStyle["--paper-checkbox-ink-size"]=a+"px",this.updateStyles()}},_computeCheckboxClass:function(e,t){var a="";return e&&(a+="checked "),t&&(a+="invalid"),a},_computeCheckmarkClass:function(e){return e?"":"hidden"},_createRipple:function(){return this._rippleContainer=this.$.checkboxContainer,Polymer.PaperInkyFocusBehaviorImpl._createRipple.call(this)}});</script> </dom-module> <iron-iconset-svg name="polydiet-icons" size="24"> <svg> <defs> <g id="menu"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></g> <g id="add"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></g> <g id="delete"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></g> </defs> </svg> </iron-iconset-svg> <dom-module id="shared-styles" assetpath="shared\"> <template> <style>:host {
+      }</style> <div id="checkboxContainer"> <div id="checkbox" class$="[[_computeCheckboxClass(checked, invalid)]]"> <div id="checkmark" class$="[[_computeCheckmarkClass(checked)]]"></div> </div> </div> <div id="checkboxLabel"><content></content></div> </template> <script>Polymer({is:"paper-checkbox",behaviors:[Polymer.PaperCheckedElementBehavior],hostAttributes:{role:"checkbox","aria-checked":!1,tabindex:0},properties:{ariaActiveAttribute:{type:String,value:"aria-checked"}},attached:function(){var e=this.getComputedStyleValue("--calculated-paper-checkbox-ink-size").trim();if("-1px"===e){var t=parseFloat(this.getComputedStyleValue("--calculated-paper-checkbox-size").trim()),a=Math.floor(8/3*t);a%2!==t%2&&a++,this.customStyle["--paper-checkbox-ink-size"]=a+"px",this.updateStyles()}},_computeCheckboxClass:function(e,t){var a="";return e&&(a+="checked "),t&&(a+="invalid"),a},_computeCheckmarkClass:function(e){return e?"":"hidden"},_createRipple:function(){return this._rippleContainer=this.$.checkboxContainer,Polymer.PaperInkyFocusBehaviorImpl._createRipple.call(this)}});</script> </dom-module> <iron-iconset-svg name="polydiet-icons" size="24"> <svg> <defs> <g id="receipt"><path d="M18 17H6v-2h12v2zm0-4H6v-2h12v2zm0-4H6V7h12v2zM3 22l1.5-1.5L6 22l1.5-1.5L9 22l1.5-1.5L12 22l1.5-1.5L15 22l1.5-1.5L18 22l1.5-1.5L21 22V2l-1.5 1.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2 4.5 3.5 3 2v20z"></path></g> <g id="view-column"><path d="M10 18h5V5h-5v13zm-6 0h5V5H4v13zM16 5v13h5V5h-5z"></path></g> <g id="add"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></g> <g id="delete"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></g> </defs> </svg> </iron-iconset-svg> <dom-module id="shared-styles" assetpath="shared\"> <template> <style>:host {
         --dark-primary-color: #512DA8;
         --default-primary-color: #673AB7;
         --light-primary-color: #D1C4E9;
@@ -1692,7 +1449,13 @@ this.currentTarget=t,this.defaultPrevented=!1,this.eventPhase=Event.AT_TARGET,th
             height: 44px;
           }
         }
-      }</style> </template> </dom-module><script>window.GluBehaviors||(window.GluBehaviors={}),function(){var a=[{name:"kcal",goal:1585,hidden:!1,id:6},{name:"Tłuszcz (g)",goal:120,hidden:!1,id:1},{name:"Białko (g)",goal:80,hidden:!1,id:0},{name:"Węglowodany (g)",goal:50,hidden:!1,id:4},{name:"Cukry (g)",goal:10,hidden:!0,id:5},{name:"Błonnik (g)",goal:30,hidden:!0,id:7},{name:"Tłuszcz nas. (g)",goal:40,hidden:!0,id:2},{name:"Tłuszcz trans. (g)",goal:0,hidden:!0,id:3},{name:"Cholesterol (mg)",goal:400,hidden:!0,id:8},{name:"Sód (mg)",goal:2300,hidden:!0,id:9},{name:"Wapń (mg)",goal:1e3,hidden:!0,id:10},{name:"Żelazo (mg)",goal:10,hidden:!0,id:11},{name:"Magnez (mg)",goal:420,hidden:!0,id:12},{name:"Fosfor (mg)",goal:700,hidden:!0,id:13},{name:"Potas (mg)",goal:4700,hidden:!0,id:14},{name:"Cynk (mg)",goal:11,hidden:!0,id:15},{name:"Miedź (mg)",goal:.9,hidden:!0,id:16},{name:"Fluor (ug)",goal:4,hidden:!0,id:17},{name:"Mangan (mg)",goal:2,hidden:!0,id:18},{name:"Selen (ug)",goal:55,hidden:!0,id:19},{name:"Witamin A, RAE (ug)",goal:900,hidden:!0,id:20},{name:"Beta-karoten (ug)",goal:2e3,hidden:!0,id:21},{name:"Witamina E (mg)",goal:10,hidden:!0,id:22},{name:"Witamina D (ug)",goal:15,hidden:!0,id:23},{name:"Witaminca C (mg)",goal:90,hidden:!0,id:24},{name:"Tiamina, B1 (mg)",goal:1.3,hidden:!0,id:25},{name:"Ryboflawina, B2 (mg)",goal:1.3,hidden:!0,id:26},{name:"Niacyna, B3 (mg)",goal:16,hidden:!0,id:27},{name:"Kwas pantotenowy (mg)",goal:5,hidden:!0,id:28},{name:"Witamina B6 (mg)",goal:1.4,hidden:!0,id:29},{name:"Foliany (ug)",goal:400,hidden:!0,id:30},{name:"Witamina B12 (ug)",goal:2.4,hidden:!0,id:31},{name:"Witamina K (ug)",goal:65,hidden:!0,id:32},{name:"Cholina (mg)",goal:550,hidden:!0,id:33},{name:"Woda (g)",goal:2e3,hidden:!0,id:34},{name:"Alkohol (g)",goal:0,hidden:!0,id:35},{name:"Kofeina (mg)",goal:0,hidden:!0,id:36},{name:"Likopen (ug)",goal:3.5,hidden:!0,id:37},{name:"Luteina (ug)",goal:3,hidden:!0,id:38},{name:"Tłuszcz nienas. (g)",goal:60,hidden:!0,id:39},{name:"Tłuszcz wielonie. (g)",goal:20,hidden:!0,id:40},{name:"Tłuszcz n-3 (g)",goal:10,hidden:!0,id:41},{name:"Tłuszcz n-6 (g)",goal:10,hidden:!0,id:42}];GluBehaviors.Nutrients={properties:{nutrients:{type:Array,notify:!0,value:a.map(function(a,d){return a.path="n."+a.id,a.sumPath=""+(a.id+1),a.weeklyGoal=7*a.goal,a})}}}}();</script> <dom-module id="vaadin-grid-active-item-themability-styles" assetpath="..\bower_components\vaadin-grid\"> <template> <style>table tr[active] .vaadin-grid-cell:not([detailscell]) ::content > .cell-content {
+        --grid-height: 60vh;
+      }
+      
+      .grid-actions {
+        display: flex;
+        justify-content: flex-end;
+      }</style> </template> </dom-module> <dom-module id="vaadin-grid-active-item-themability-styles" assetpath="..\bower_components\vaadin-grid\"> <template> <style>table tr[active] .vaadin-grid-cell:not([detailscell]) ::content > .cell-content {
         @apply(--vaadin-grid-body-row-active-cell);
       }</style> </template> </dom-module> <script>window.vaadin=window.vaadin||{},vaadin.elements=vaadin.elements||{},vaadin.elements.grid=vaadin.elements.grid||{},vaadin.elements.grid.ActiveItemBehavior={properties:{activeItem:{type:Object,notify:!0}},listeners:{"cell-activate":"_activateItem"},observers:["_activeItemChanged(activeItem)"],_activateItem:function(e){var t=e.detail.model.item;this.activeItem=this.activeItem!==t?t:null,e.stopImmediatePropagation()},_activeItemChanged:function(){this.$.scroller._physicalItems&&this.$.scroller._physicalItems.forEach(function(e){this._updateItem(e,e.item)}.bind(this))}};</script> <dom-module id="vaadin-grid-table-scroll-styles" assetpath="..\bower_components\vaadin-grid\"> <template> <style>:host {
         transform: translateZ(0);
@@ -2241,7 +2004,158 @@ this.currentTarget=t,this.defaultPrevented=!1,this.eventPhase=Event.AT_TARGET,th
 
       :host(.keyboard-focus) {
         background: var(--paper-fab-keyboard-focus-background, --paper-pink-900);
-      }</style> <iron-icon id="icon" hidden$="{{!_computeIsIconFab(icon, src)}}" src="[[src]]" icon="[[icon]]"></iron-icon> <span hidden$="{{_computeIsIconFab(icon, src)}}">{{label}}</span> </template> <script>Polymer({is:"paper-fab",behaviors:[Polymer.PaperButtonBehavior],properties:{src:{type:String,value:""},icon:{type:String,value:""},mini:{type:Boolean,value:!1,reflectToAttribute:!0},label:{type:String,observer:"_labelChanged"}},_labelChanged:function(){this.setAttribute("aria-label",this.label)},_computeIsIconFab:function(e,t){return e.length>0||t.length>0}});</script> </dom-module> <script>Polymer.PaperDialogBehaviorImpl={hostAttributes:{role:"dialog",tabindex:"-1"},properties:{modal:{type:Boolean,value:!1}},observers:["_modalChanged(modal, _readied)"],listeners:{tap:"_onDialogClick"},ready:function(){this.__prevNoCancelOnOutsideClick=this.noCancelOnOutsideClick,this.__prevNoCancelOnEscKey=this.noCancelOnEscKey,this.__prevWithBackdrop=this.withBackdrop},_modalChanged:function(i,e){e&&(i?(this.__prevNoCancelOnOutsideClick=this.noCancelOnOutsideClick,this.__prevNoCancelOnEscKey=this.noCancelOnEscKey,this.__prevWithBackdrop=this.withBackdrop,this.noCancelOnOutsideClick=!0,this.noCancelOnEscKey=!0,this.withBackdrop=!0):(this.noCancelOnOutsideClick=this.noCancelOnOutsideClick&&this.__prevNoCancelOnOutsideClick,this.noCancelOnEscKey=this.noCancelOnEscKey&&this.__prevNoCancelOnEscKey,this.withBackdrop=this.withBackdrop&&this.__prevWithBackdrop))},_updateClosingReasonConfirmed:function(i){this.closingReason=this.closingReason||{},this.closingReason.confirmed=i},_onDialogClick:function(i){for(var e=Polymer.dom(i).path,o=0;o<e.indexOf(this);o++){var t=e[o];if(t.hasAttribute&&(t.hasAttribute("dialog-dismiss")||t.hasAttribute("dialog-confirm"))){this._updateClosingReasonConfirmed(t.hasAttribute("dialog-confirm")),this.close(),i.stopPropagation();break}}}},Polymer.PaperDialogBehavior=[Polymer.IronOverlayBehavior,Polymer.PaperDialogBehaviorImpl];</script> <dom-module id="paper-dialog-shared-styles" assetpath="..\bower_components\paper-dialog-behavior\"> <template> <style>:host {
+      }</style> <iron-icon id="icon" hidden$="{{!_computeIsIconFab(icon, src)}}" src="[[src]]" icon="[[icon]]"></iron-icon> <span hidden$="{{_computeIsIconFab(icon, src)}}">{{label}}</span> </template> <script>Polymer({is:"paper-fab",behaviors:[Polymer.PaperButtonBehavior],properties:{src:{type:String,value:""},icon:{type:String,value:""},mini:{type:Boolean,value:!1,reflectToAttribute:!0},label:{type:String,observer:"_labelChanged"}},_labelChanged:function(){this.setAttribute("aria-label",this.label)},_computeIsIconFab:function(e,t){return e.length>0||t.length>0}});</script> </dom-module> <script>Polymer.PaperDialogBehaviorImpl={hostAttributes:{role:"dialog",tabindex:"-1"},properties:{modal:{type:Boolean,value:!1}},observers:["_modalChanged(modal, _readied)"],listeners:{tap:"_onDialogClick"},ready:function(){this.__prevNoCancelOnOutsideClick=this.noCancelOnOutsideClick,this.__prevNoCancelOnEscKey=this.noCancelOnEscKey,this.__prevWithBackdrop=this.withBackdrop},_modalChanged:function(i,e){e&&(i?(this.__prevNoCancelOnOutsideClick=this.noCancelOnOutsideClick,this.__prevNoCancelOnEscKey=this.noCancelOnEscKey,this.__prevWithBackdrop=this.withBackdrop,this.noCancelOnOutsideClick=!0,this.noCancelOnEscKey=!0,this.withBackdrop=!0):(this.noCancelOnOutsideClick=this.noCancelOnOutsideClick&&this.__prevNoCancelOnOutsideClick,this.noCancelOnEscKey=this.noCancelOnEscKey&&this.__prevNoCancelOnEscKey,this.withBackdrop=this.withBackdrop&&this.__prevWithBackdrop))},_updateClosingReasonConfirmed:function(i){this.closingReason=this.closingReason||{},this.closingReason.confirmed=i},_onDialogClick:function(i){for(var e=Polymer.dom(i).path,o=0;o<e.indexOf(this);o++){var t=e[o];if(t.hasAttribute&&(t.hasAttribute("dialog-dismiss")||t.hasAttribute("dialog-confirm"))){this._updateClosingReasonConfirmed(t.hasAttribute("dialog-confirm")),this.close(),i.stopPropagation();break}}}},Polymer.PaperDialogBehavior=[Polymer.IronOverlayBehavior,Polymer.PaperDialogBehaviorImpl];</script> <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic"> <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700"> <style is="custom-style">:root {
+
+    /* Shared Styles */
+    --paper-font-common-base: {
+      font-family: 'Roboto', 'Noto', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    };
+
+    --paper-font-common-code: {
+      font-family: 'Roboto Mono', 'Consolas', 'Menlo', monospace;
+      -webkit-font-smoothing: antialiased;
+    };
+
+    --paper-font-common-expensive-kerning: {
+      text-rendering: optimizeLegibility;
+    };
+
+    --paper-font-common-nowrap: {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    };
+
+    /* Material Font Styles */
+
+    --paper-font-display4: {
+      @apply(--paper-font-common-base);
+      @apply(--paper-font-common-nowrap);
+
+      font-size: 112px;
+      font-weight: 300;
+      letter-spacing: -.044em;
+      line-height: 120px;
+    };
+
+    --paper-font-display3: {
+      @apply(--paper-font-common-base);
+      @apply(--paper-font-common-nowrap);
+
+      font-size: 56px;
+      font-weight: 400;
+      letter-spacing: -.026em;
+      line-height: 60px;
+    };
+
+    --paper-font-display2: {
+      @apply(--paper-font-common-base);
+
+      font-size: 45px;
+      font-weight: 400;
+      letter-spacing: -.018em;
+      line-height: 48px;
+    };
+
+    --paper-font-display1: {
+      @apply(--paper-font-common-base);
+
+      font-size: 34px;
+      font-weight: 400;
+      letter-spacing: -.01em;
+      line-height: 40px;
+    };
+
+    --paper-font-headline: {
+      @apply(--paper-font-common-base);
+
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: -.012em;
+      line-height: 32px;
+    };
+
+    --paper-font-title: {
+      @apply(--paper-font-common-base);
+      @apply(--paper-font-common-nowrap);
+
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 28px;
+    };
+
+    --paper-font-subhead: {
+      @apply(--paper-font-common-base);
+
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
+    };
+
+    --paper-font-body2: {
+      @apply(--paper-font-common-base);
+
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 24px;
+    };
+
+    --paper-font-body1: {
+      @apply(--paper-font-common-base);
+
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+    };
+
+    --paper-font-caption: {
+      @apply(--paper-font-common-base);
+      @apply(--paper-font-common-nowrap);
+
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.011em;
+      line-height: 20px;
+    };
+
+    --paper-font-menu: {
+      @apply(--paper-font-common-base);
+      @apply(--paper-font-common-nowrap);
+
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 24px;
+    };
+
+    --paper-font-button: {
+      @apply(--paper-font-common-base);
+      @apply(--paper-font-common-nowrap);
+
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.018em;
+      line-height: 24px;
+      text-transform: uppercase;
+    };
+
+    --paper-font-code2: {
+      @apply(--paper-font-common-code);
+
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+    };
+
+    --paper-font-code1: {
+      @apply(--paper-font-common-code);
+
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+    };
+
+  }</style> <dom-module id="paper-dialog-shared-styles" assetpath="..\bower_components\paper-dialog-behavior\"> <template> <style>:host {
         display: block;
         margin: 24px 40px;
 
@@ -2616,7 +2530,7 @@ this.currentTarget=t,this.defaultPrevented=!1,this.eventPhase=Event.AT_TARGET,th
 
       label {
         pointer-events: none;
-      }</style> <paper-input-container no-label-float="[[noLabelFloat]]" always-float-label="[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]]" auto-validate$="[[autoValidate]]" disabled$="[[disabled]]" invalid="[[invalid]]"> <content select="[prefix]"></content> <label hidden$="[[!label]]" aria-hidden="true" for="input">[[label]]</label> <input is="iron-input" id="input" aria-labelledby$="[[_ariaLabelledBy]]" aria-describedby$="[[_ariaDescribedBy]]" disabled$="[[disabled]]" title$="[[title]]" bind-value="{{value}}" invalid="{{invalid}}" prevent-invalid-input="[[preventInvalidInput]]" allowed-pattern="[[allowedPattern]]" validator="[[validator]]" type$="[[type]]" pattern$="[[pattern]]" required$="[[required]]" autocomplete$="[[autocomplete]]" autofocus$="[[autofocus]]" inputmode$="[[inputmode]]" minlength$="[[minlength]]" maxlength$="[[maxlength]]" min$="[[min]]" max$="[[max]]" step$="[[step]]" name$="[[name]]" placeholder$="[[placeholder]]" readonly$="[[readonly]]" list$="[[list]]" size$="[[size]]" autocapitalize$="[[autocapitalize]]" autocorrect$="[[autocorrect]]" on-change="_onChange" tabindex$="[[tabindex]]" autosave$="[[autosave]]" results$="[[results]]" accept$="[[accept]]" multiple$="[[multiple]]"> <content select="[suffix]"></content> <template is="dom-if" if="[[errorMessage]]"> <paper-input-error aria-live="assertive">[[errorMessage]]</paper-input-error> </template> <template is="dom-if" if="[[charCounter]]"> <paper-input-char-counter></paper-input-char-counter> </template> </paper-input-container> </template> </dom-module> <script>Polymer({is:"paper-input",behaviors:[Polymer.IronFormElementBehavior,Polymer.PaperInputBehavior]});</script> <script>window.GluBehaviors||(window.GluBehaviors={}),GluBehaviors.Formatters={formatAmount:function(t,r){if(null==t)return"";var n=this.get(r,t);return null==n?"":n<0?"-":0===n?"0":n.toFixed(n<1?3:n<10?2:n<100?1:0)},getColumWidth:function(t){return t?"0":"150px"}};</script><dom-module id="foods-grid"> <template> <style include="shared-styles">:host {
+      }</style> <paper-input-container no-label-float="[[noLabelFloat]]" always-float-label="[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]]" auto-validate$="[[autoValidate]]" disabled$="[[disabled]]" invalid="[[invalid]]"> <content select="[prefix]"></content> <label hidden$="[[!label]]" aria-hidden="true" for="input">[[label]]</label> <input is="iron-input" id="input" aria-labelledby$="[[_ariaLabelledBy]]" aria-describedby$="[[_ariaDescribedBy]]" disabled$="[[disabled]]" title$="[[title]]" bind-value="{{value}}" invalid="{{invalid}}" prevent-invalid-input="[[preventInvalidInput]]" allowed-pattern="[[allowedPattern]]" validator="[[validator]]" type$="[[type]]" pattern$="[[pattern]]" required$="[[required]]" autocomplete$="[[autocomplete]]" autofocus$="[[autofocus]]" inputmode$="[[inputmode]]" minlength$="[[minlength]]" maxlength$="[[maxlength]]" min$="[[min]]" max$="[[max]]" step$="[[step]]" name$="[[name]]" placeholder$="[[placeholder]]" readonly$="[[readonly]]" list$="[[list]]" size$="[[size]]" autocapitalize$="[[autocapitalize]]" autocorrect$="[[autocorrect]]" on-change="_onChange" tabindex$="[[tabindex]]" autosave$="[[autosave]]" results$="[[results]]" accept$="[[accept]]" multiple$="[[multiple]]"> <content select="[suffix]"></content> <template is="dom-if" if="[[errorMessage]]"> <paper-input-error aria-live="assertive">[[errorMessage]]</paper-input-error> </template> <template is="dom-if" if="[[charCounter]]"> <paper-input-char-counter></paper-input-char-counter> </template> </paper-input-container> </template> </dom-module> <script>Polymer({is:"paper-input",behaviors:[Polymer.IronFormElementBehavior,Polymer.PaperInputBehavior]});</script> <script>window.GluBehaviors||(window.GluBehaviors={}),GluBehaviors.Formatters={formatAmount:function(r,e){if(null==r)return"";var o=this.get(e,r);return null==o?"":o<0?"-":0===o?"0":o.toFixed(o<1?3:o<10?2:o<100?1:0).replace(".",",")}};</script><dom-module id="foods-grid"> <template> <style include="shared-styles">:host {
         display: block;
       }
       
@@ -2625,10 +2539,11 @@ this.currentTarget=t,this.defaultPrevented=!1,this.eventPhase=Event.AT_TARGET,th
       }
       
       #grid {
+        height: var(--grid-height);
         --vaadin-grid-header-cell: {
           height: 85px;
         }
-      }</style> <vaadin-grid id="grid" items="[[foods]]" active-item="{{activeItem}}"> <vaadin-grid-column frozen="" resizable="" width="200px"> <template class="header"> <vaadin-grid-sorter path="t" direction="asc">Produkt</vaadin-grid-sorter> <vaadin-grid-filter path="t" value="{{_productFilter}}"> <paper-input label="Filtruj produkty" value="{{_productFilter}}"></paper-input> </vaadin-grid-filter> </template> <template>[[item.t]]</template> </vaadin-grid-column> <template is="dom-repeat" items="[[nutrients]]" as="nutrient"> <template is="dom-if" if="[[!nutrient.hidden]]" restamp=""> <vaadin-grid-column resizable="" width="[[getColumWidth(nutrient.hidden)]]"> <template class="header"> <vaadin-grid-sorter path="[[nutrient.path]]">[[nutrient.name]]</vaadin-grid-sorter> </template> <template>[[formatAmount(item, nutrient.path)]]</template> </vaadin-grid-column> </template> </template> </vaadin-grid> <paper-fab icon="polydiet-icons:add" id="addFood" disabled="[[!isFoodSelected]]" on-tap="openAddFoodModal"></paper-fab> <paper-dialog modal="" id="addSelectedFoodModal"> <h2>Dodaj produkt "[[selectedFood.t]]"</h2> <p> <paper-input label="Waga w gramach" type="number" placeholder="Wpisz wagę w gramach" id="addFoodQuantity" autofocus=""></paper-input> </p> <div class="buttons"> <paper-button dialog-dismiss="">Anuluj</paper-button> <paper-button dialog-confirm="" on-tap="addToList">Dodaj do listy tygodniowej</paper-button> </div> </paper-dialog> </template> <script>!function(){Polymer({is:"foods-grid",behaviors:[GluBehaviors.Formatters],properties:{nutrients:{type:Array,value:[]},foods:{type:Array,notify:!0,value:[]},selectedFood:{type:Object,notify:!0,value:null},isFoodSelected:{type:Boolean,notify:!0,computed:"_isFoodSelected(selectedFood)"},activeItem:{observer:"_activeItemChanged"}},_isFoodSelected:function(e){return null!==e},_activeItemChanged:function(e){this.$.grid.selectedItems=e?[e]:[],this.selectedFood=e},openAddFoodModal:function(){this.$.addFoodQuantity.value=null,this.$.addSelectedFoodModal.open()},addToList:function(e){e.preventDefault(),e.stopPropagation(),this.fire("add-to-list",{amount:parseFloat(this.$.addFoodQuantity.value),food:this.selectedFood}),this.$.grid.selectedItems=[],this.$.addSelectedFoodModal.close()}})}();</script> </dom-module> <dom-module id="vaadin-grid-selection-column" assetpath="..\bower_components\vaadin-grid\"> <template> <template class="header" id="defaultHeaderTemplate"> <input hidden$="[[_selectAllHidden]]" type="checkbox" on-click="_onSelectAll" checked="[[_isChecked(selectAll, _indeterminate)]]" indeterminate="[[_indeterminate]]"> </template> <template> <input type="checkbox" checked="{{selected::change}}"> </template> </template> </dom-module> <script>Polymer({is:"vaadin-grid-selection-column",behaviors:[vaadin.elements.grid.ColumnBehavior],properties:{width:{type:String,value:"52px"},flexGrow:{type:Number,value:0},selectAll:{type:Boolean,value:!1,notify:!0},autoSelect:{type:Boolean,value:!1},_grid:Object,_indeterminate:Boolean,_previousActiveItem:Object,_selectAllHidden:Boolean},observers:["_onSelectAllChanged(selectAll, _grid)"],detached:function(){this._grid&&(this.unlisten(this._grid,"active-item-changed","_onActiveItemChanged"),this.unlisten(this._grid,"data-source-changed","_onDataSourceChanged"),this.unlisten(this._grid,"filter-changed","_onSelectedItemsChanged"),this.unlisten(this._grid,"selected-items-changed","_onSelectedItemsChanged"))},attached:function(){this._grid=this._findGrid(this),this._grid&&(this.listen(this._grid,"active-item-changed","_onActiveItemChanged"),this.listen(this._grid,"data-source-changed","_onDataSourceChanged"),this.listen(this._grid,"filter-changed","_onSelectedItemsChanged"),this.listen(this._grid,"selected-items-changed","_onSelectedItemsChanged"))},_headerTemplateChanged:function(e){var t=new vaadin.elements.grid.Templatizer(e===this.$.defaultHeaderTemplate?this:this.dataHost);t._instanceProps={},t.template=e,this.fire("property-changed",{path:"headerTemplate",value:e})},_findGrid:function(e){for(;e&&"vaadin-grid"!=e.localName;)e=e.parentElement;return e||void 0},_selectFirstTemplate:function(e){return Polymer.dom(this).querySelectorAll(e)[0]||Polymer.dom(this.root).querySelectorAll(e)[0]},_onSelectAllChanged:function(e,t){this._selectAllChangeLock||(t.selectedItems=e&&t.items?t._filter(t.items):[])},_arrayContains:function(e,t){for(var i=0;e&&t&&t[i]&&e.indexOf(t[i])>=0;i++);return i==t.length},_onSelectAll:function(e){this.selectAll=this._indeterminate||!this.selectAll},_isChecked:function(e,t){return t||e},_onActiveItemChanged:function(e){var t=e.detail.value;if(this.autoSelect){var i=t||this._previousActiveItem;this._grid._toggleItem(i)}this._previousActiveItem=t},_onSelectedItemsChanged:function(e){this._selectAllChangeLock=!0,this._grid.selectedItems.length?this._arrayContains(this._grid.selectedItems,this._grid._filter(this._grid.items))?(this.selectAll=!0,this._indeterminate=!1):(this.selectAll=!1,this._indeterminate=!0):(this.selectAll=!1,this._indeterminate=!1),this._selectAllChangeLock=!1},_onDataSourceChanged:function(e){this._selectAllHidden=!this._grid.items}});</script> <script>Polymer.IronRangeBehavior={properties:{value:{type:Number,value:0,notify:!0,reflectToAttribute:!0},min:{type:Number,value:0,notify:!0},max:{type:Number,value:100,notify:!0},step:{type:Number,value:1,notify:!0},ratio:{type:Number,value:0,readOnly:!0,notify:!0}},observers:["_update(value, min, max, step)"],_calcRatio:function(t){return(this._clampValue(t)-this.min)/(this.max-this.min)},_clampValue:function(t){return Math.min(this.max,Math.max(this.min,this._calcStep(t)))},_calcStep:function(t){if(t=parseFloat(t),!this.step)return t;var e=Math.round((t-this.min)/this.step);return this.step<1?e/(1/this.step)+this.min:e*this.step+this.min},_validateValue:function(){var t=this._clampValue(this.value);return this.value=this.oldValue=isNaN(t)?this.oldValue:t,this.value!==t},_update:function(){this._validateValue(),this._setRatio(100*this._calcRatio(this.value))}};</script> <dom-module id="paper-progress" assetpath="..\bower_components\paper-progress\"> <template> <style>:host {
+      }</style> <vaadin-grid id="grid" items="[[foods]]" active-item="{{activeItem}}"> <vaadin-grid-column frozen="" resizable="" width="200px"> <template class="header"> <vaadin-grid-sorter path="t" direction="asc">Produkt</vaadin-grid-sorter> <vaadin-grid-filter path="t" value="{{_productFilter}}"> <paper-input label="Filtruj produkty" value="{{_productFilter}}"></paper-input> </vaadin-grid-filter> </template> <template>[[item.t]]</template> </vaadin-grid-column> <template is="dom-repeat" items="[[nutrients]]" as="nutrient"> <template is="dom-if" if="[[!nutrient.hidden]]" restamp=""> <vaadin-grid-column resizable="" width="150px"> <template class="header"> <vaadin-grid-sorter path="[[nutrient.path]]">[[nutrient.name]]</vaadin-grid-sorter> </template> <template>[[formatAmount(item, nutrient.path)]]</template> </vaadin-grid-column> </template> </template> </vaadin-grid> <div class="grid-actions"> <paper-fab icon="polydiet-icons:add" id="addFood" disabled="[[!isFoodSelected]]" on-tap="openAddFoodModal" title="Dodaj zaznaczony produkt do tygodniówki"></paper-fab> </div> <paper-dialog modal="" id="addSelectedFoodModal"> <h2>Dodaj produkt "[[selectedFood.t]]"</h2> <p> <paper-input label="Waga w gramach" type="number" placeholder="Wpisz wagę w gramach" id="addFoodQuantity" autofocus=""></paper-input> </p> <p> <paper-checkbox id="addFoodAllowDuplicates" checked="">Pozwól na duplikat </paper-checkbox></p> <div class="buttons"> <paper-button dialog-dismiss="">Anuluj</paper-button> <paper-button dialog-confirm="" on-tap="addToList">Dodaj do listy tygodniowej</paper-button> </div> </paper-dialog> </template> <script>!function(){Polymer({is:"foods-grid",behaviors:[GluBehaviors.Formatters],properties:{nutrients:{type:Array,value:[]},foods:{type:Array,notify:!0,value:[]},selectedFood:{type:Object,notify:!0,value:null},isFoodSelected:{type:Boolean,notify:!0,computed:"_isFoodSelected(selectedFood)"},activeItem:{observer:"_activeItemChanged"}},_isFoodSelected:function(e){return null!==e},_activeItemChanged:function(e){this.$.grid.selectedItems=e?[e]:[],this.selectedFood=e},openAddFoodModal:function(){this.$.addFoodQuantity.value=null,this.$.addFoodAllowDuplicates.checked=!1,this.$.addSelectedFoodModal.open()},addToList:function(e){e.preventDefault(),e.stopPropagation(),this.fire("add-to-list",{amount:parseFloat(this.$.addFoodQuantity.value),food:this.selectedFood,allowDuplicates:this.$.addFoodAllowDuplicates.checked}),this.$.grid.selectedItems=[],this.selectedFood=null,this.$.addSelectedFoodModal.close()}})}();</script> </dom-module> <dom-module id="vaadin-grid-selection-column" assetpath="..\bower_components\vaadin-grid\"> <template> <template class="header" id="defaultHeaderTemplate"> <input hidden$="[[_selectAllHidden]]" type="checkbox" on-click="_onSelectAll" checked="[[_isChecked(selectAll, _indeterminate)]]" indeterminate="[[_indeterminate]]"> </template> <template> <input type="checkbox" checked="{{selected::change}}"> </template> </template> </dom-module> <script>Polymer({is:"vaadin-grid-selection-column",behaviors:[vaadin.elements.grid.ColumnBehavior],properties:{width:{type:String,value:"52px"},flexGrow:{type:Number,value:0},selectAll:{type:Boolean,value:!1,notify:!0},autoSelect:{type:Boolean,value:!1},_grid:Object,_indeterminate:Boolean,_previousActiveItem:Object,_selectAllHidden:Boolean},observers:["_onSelectAllChanged(selectAll, _grid)"],detached:function(){this._grid&&(this.unlisten(this._grid,"active-item-changed","_onActiveItemChanged"),this.unlisten(this._grid,"data-source-changed","_onDataSourceChanged"),this.unlisten(this._grid,"filter-changed","_onSelectedItemsChanged"),this.unlisten(this._grid,"selected-items-changed","_onSelectedItemsChanged"))},attached:function(){this._grid=this._findGrid(this),this._grid&&(this.listen(this._grid,"active-item-changed","_onActiveItemChanged"),this.listen(this._grid,"data-source-changed","_onDataSourceChanged"),this.listen(this._grid,"filter-changed","_onSelectedItemsChanged"),this.listen(this._grid,"selected-items-changed","_onSelectedItemsChanged"))},_headerTemplateChanged:function(e){var t=new vaadin.elements.grid.Templatizer(e===this.$.defaultHeaderTemplate?this:this.dataHost);t._instanceProps={},t.template=e,this.fire("property-changed",{path:"headerTemplate",value:e})},_findGrid:function(e){for(;e&&"vaadin-grid"!=e.localName;)e=e.parentElement;return e||void 0},_selectFirstTemplate:function(e){return Polymer.dom(this).querySelectorAll(e)[0]||Polymer.dom(this.root).querySelectorAll(e)[0]},_onSelectAllChanged:function(e,t){this._selectAllChangeLock||(t.selectedItems=e&&t.items?t._filter(t.items):[])},_arrayContains:function(e,t){for(var i=0;e&&t&&t[i]&&e.indexOf(t[i])>=0;i++);return i==t.length},_onSelectAll:function(e){this.selectAll=this._indeterminate||!this.selectAll},_isChecked:function(e,t){return t||e},_onActiveItemChanged:function(e){var t=e.detail.value;if(this.autoSelect){var i=t||this._previousActiveItem;this._grid._toggleItem(i)}this._previousActiveItem=t},_onSelectedItemsChanged:function(e){this._selectAllChangeLock=!0,this._grid.selectedItems.length?this._arrayContains(this._grid.selectedItems,this._grid._filter(this._grid.items))?(this.selectAll=!0,this._indeterminate=!1):(this.selectAll=!1,this._indeterminate=!0):(this.selectAll=!1,this._indeterminate=!1),this._selectAllChangeLock=!1},_onDataSourceChanged:function(e){this._selectAllHidden=!this._grid.items}});</script> <script>Polymer.IronRangeBehavior={properties:{value:{type:Number,value:0,notify:!0,reflectToAttribute:!0},min:{type:Number,value:0,notify:!0},max:{type:Number,value:100,notify:!0},step:{type:Number,value:1,notify:!0},ratio:{type:Number,value:0,readOnly:!0,notify:!0}},observers:["_update(value, min, max, step)"],_calcRatio:function(t){return(this._clampValue(t)-this.min)/(this.max-this.min)},_clampValue:function(t){return Math.min(this.max,Math.max(this.min,this._calcStep(t)))},_calcStep:function(t){if(t=parseFloat(t),!this.step)return t;var e=Math.round((t-this.min)/this.step);return this.step<1?e/(1/this.step)+this.min:e*this.step+this.min},_validateValue:function(){var t=this._clampValue(this.value);return this.value=this.oldValue=isNaN(t)?this.oldValue:t,this.value!==t},_update:function(){this._validateValue(),this._setRatio(100*this._calcRatio(this.value))}};</script> <dom-module id="paper-progress" assetpath="..\bower_components\paper-progress\"> <template> <style>:host {
         display: block;
         width: 200px;
         position: relative;
@@ -2793,13 +2708,21 @@ this.currentTarget=t,this.defaultPrevented=!1,this.eventPhase=Event.AT_TARGET,th
         display: block;
       }
       
-      #deleteProducts {
+      .grid-actions paper-fab {
         margin: 1rem;
+        margin-left: 0;
       }
       
-      .amountInput {
+      .amountInput,
+      .titleInput {
         border: 0;
-      }</style> <vaadin-grid id="grid" items="[[products]]" selected-items="{{selectedItems}}"> <vaadin-grid-selection-column frozen="" auto-select=""></vaadin-grid-selection-column> <vaadin-grid-column frozen="" resizable="" width="200px"> <template class="header"> <vaadin-grid-sorter path="t" direction="asc">Produkt</vaadin-grid-sorter> </template> <template>[[item.t]]</template> <template class="footer"> Suma: </template> </vaadin-grid-column> <vaadin-grid-column frozen="" resizable="" width="90px"> <template class="header"> <vaadin-grid-sorter path="a">Porcja (g)</vaadin-grid-sorter> </template> <template> <input value$="[[item.a]]" type="number" class="amountInput" on-change="_handleInput" itemid="[[item.id]]"> </template> <template class="footer"> [[formatAmount(sums, "1")]] </template> </vaadin-grid-column> <template is="dom-repeat" items="[[nutrients]]" as="nutrient"> <template is="dom-if" if="[[!nutrient.hidden]]" restamp=""> <vaadin-grid-column resizable="" width="[[getColumWidth(nutrient.hidden)]]"> <template class="header"> <vaadin-grid-sorter path="[[nutrient.path]]">[[nutrient.name]]</vaadin-grid-sorter> </template> <template>[[formatAmount(item, nutrient.path)]]</template> <template class="footer"> <glu-progress text="[[formatAmount(sums, nutrient.sumPath)]]" current="[[get(nutrient.sumPath, sums)]]" limit="[[nutrient.weeklyGoal]]"></glu-progress> </template> </vaadin-grid-column> </template> </template> </vaadin-grid> <paper-fab icon="polydiet-icons:delete" id="deleteProducts" disabled="[[!isProductSelected]]" on-tap="removeSelected"></paper-fab> </template> <script>!function(){Polymer({is:"weekly-grid",properties:{products:{type:Array,value:[]},nutrients:{type:Array,value:[]},sums:{type:Array,value:[]},isProductSelected:{type:Boolean,notify:!0,computed:"_isProductSelected(selectedItems.*)"},selectedItems:{type:Array,value:[],notify:!0}},behaviors:[GluBehaviors.Formatters],_isProductSelected:function(e){return e.base.length>0},_handleInput:function(e){console.log(e.target.value);var t=parseInt(e.target.value,10);!Number.isNaN(t)&&t>0&&this.fire("amount-updated",{id:e.target.itemid,value:t})},removeSelected:function(e){var t=this.$.grid.selectedItems;this.$.grid.selectedItems=[],this.fire("remove-used",{products:t})}})}();</script> </dom-module><dom-module id="weekly-stats"> <template> <style>:host {
+        font: inherit;
+        background: transparent;
+      }
+      
+      #grid {
+        height: var(--grid-height);
+      }</style> <vaadin-grid id="grid" items="[[products]]" selected-items="{{selectedItems}}"> <vaadin-grid-selection-column frozen="" auto-select=""> <template class="header"></template> <template> <paper-checkbox checked="{{selected::change}}" aria-label="Zaznacz wiersz"> </paper-checkbox></template> </vaadin-grid-selection-column> <vaadin-grid-column frozen="" resizable="" width="200px"> <template class="header"> <vaadin-grid-sorter path="t" direction="asc">Produkt</vaadin-grid-sorter> </template> <template><input value="[[item.t]]" on-change="_handleTitleInput" class="titleInput" itemid="[[item.id]]"> </template> <template class="footer"> Suma: </template> </vaadin-grid-column> <vaadin-grid-column frozen="" resizable="" width="90px"> <template class="header">Porcja (g)</template> <template> <input value$="[[item.a]]" type="number" class="amountInput" on-change="_handleAmountInput" itemid="[[item.id]]"> </template> <template class="footer"> [[formatAmount(sums, "1")]] </template> </vaadin-grid-column> <template is="dom-repeat" items="[[nutrients]]" as="nutrient"> <template is="dom-if" if="[[!nutrient.hidden]]" restamp=""> <vaadin-grid-column resizable="" width="150px"> <template class="header"> <vaadin-grid-sorter path="[[nutrient.path]]">[[nutrient.name]]</vaadin-grid-sorter> </template> <template>[[formatAmount(item, nutrient.path)]]</template> <template class="footer"> <glu-progress text="[[formatAmount(sums, nutrient.sumPath)]]" current="[[get(nutrient.sumPath, sums)]]" limit="[[nutrient.weeklyGoal]]"></glu-progress> </template> </vaadin-grid-column> </template> </template> </vaadin-grid> <div class="grid-actions"> <paper-fab icon="polydiet-icons:receipt" id="createReceipt" disabled="[[!isMultipleProductsSelected]]" on-tap="createReceiptFromSelected" title="Utwórz z zaznaczonych przepis"></paper-fab> <paper-fab icon="polydiet-icons:delete" id="deleteProducts" disabled="[[!isProductSelected]]" on-tap="removeSelected" title="Usuń zaznaczone"></paper-fab> </div> </template> <script>!function(){Polymer({is:"weekly-grid",properties:{products:{type:Array,value:[]},nutrients:{type:Array,value:[]},sums:{type:Array,value:[]},isProductSelected:{type:Boolean,notify:!0,computed:"_isProductSelected(selectedItems.*)"},isMultipleProductsSelected:{type:Boolean,notify:!0,computed:"_isMultipleProductsSelected(selectedItems.*)"},selectedItems:{type:Array,value:[],notify:!0}},behaviors:[GluBehaviors.Formatters],_isProductSelected:function(e){return e.base.length>0},_isMultipleProductsSelected:function(e){return e.base.length>=2},_handleTitleInput:function(e){var t=e.target.value;t.length>0&&this.fire("title-updated",{id:e.target.itemid,value:t})},_handleAmountInput:function(e){var t=parseInt(e.target.value,10);!Number.isNaN(t)&&t>0&&this.fire("amount-updated",{id:e.target.itemid,value:t})},removeSelected:function(e){var t=this.$.grid.selectedItems;this.$.grid.selectedItems=[],this.fire("remove-used",{products:t})},createReceiptFromSelected:function(e){var t=this.$.grid.selectedItems;this.$.grid.selectedItems=[],this.fire("recipe-used",{products:t})}})}();</script> </dom-module><dom-module id="weekly-stats"> <template> <style>:host {
         display: block;
       }
       
@@ -2816,7 +2739,7 @@ this.currentTarget=t,this.defaultPrevented=!1,this.eventPhase=Event.AT_TARGET,th
 
       h4 {
         margin: 10px 0 0 0;
-      }</style> <div class="columns"> <template is="dom-repeat" items="[[nutrients]]" as="nutrient"> <div class="element"> <h4>[[nutrient.name]]</h4> <glu-progress text="[[formatAmount(sums, nutrient.sumPath)]]/[[formatAmount(nutrient, 'weeklyGoal')]]" current="[[get(nutrient.sumPath, sums)]]" limit="[[nutrient.weeklyGoal]]"></glu-progress> </div></template> </div> </template> <script>!function(){"use strict";Polymer({is:"weekly-stats",properties:{nutrients:{type:Array,value:[]},sums:{type:Array,value:[]}},behaviors:[GluBehaviors.Formatters]})}();</script> </dom-module> <script>function MakePromise(t){function e(t){if("object"!=typeof this||"function"!=typeof t)throw new TypeError;this._state=null,this._value=null,this._deferreds=[],u(t,i.bind(this),r.bind(this))}function n(e){var n=this;return null===this._state?void this._deferreds.push(e):void t(function(){var t=n._state?e.onFulfilled:e.onRejected;if("function"!=typeof t)return void(n._state?e.resolve:e.reject)(n._value);var i;try{i=t(n._value)}catch(t){return void e.reject(t)}e.resolve(i)})}function i(t){try{if(t===this)throw new TypeError;if(t&&("object"==typeof t||"function"==typeof t)){var e=t.then;if("function"==typeof e)return void u(e.bind(t),i.bind(this),r.bind(this))}this._state=!0,this._value=t,o.call(this)}catch(t){r.call(this,t)}}function r(t){this._state=!1,this._value=t,o.call(this)}function o(){for(var t=0,e=this._deferreds.length;t<e;t++)n.call(this,this._deferreds[t]);this._deferreds=null}function u(t,e,n){var i=!1;try{t(function(t){i||(i=!0,e(t))},function(t){i||(i=!0,n(t))})}catch(t){if(i)return;i=!0,n(t)}}return e.prototype.catch=function(t){return this.then(null,t)},e.prototype.then=function(t,i){var r=this;return new e(function(e,o){n.call(r,{onFulfilled:t,onRejected:i,resolve:e,reject:o})})},e.resolve=function(t){return t&&"object"==typeof t&&t.constructor===e?t:new e(function(e){e(t)})},e.reject=function(t){return new e(function(e,n){n(t)})},e}"undefined"!=typeof module&&(module.exports=MakePromise);</script> <script>window.Promise||(window.Promise=MakePromise(Polymer.Base.async));</script> <script>"use strict";Polymer({is:"iron-request",hostAttributes:{hidden:!0},properties:{xhr:{type:Object,notify:!0,readOnly:!0,value:function(){return new XMLHttpRequest}},response:{type:Object,notify:!0,readOnly:!0,value:function(){return null}},status:{type:Number,notify:!0,readOnly:!0,value:0},statusText:{type:String,notify:!0,readOnly:!0,value:""},completes:{type:Object,readOnly:!0,notify:!0,value:function(){return new Promise(function(e,t){this.resolveCompletes=e,this.rejectCompletes=t}.bind(this))}},progress:{type:Object,notify:!0,readOnly:!0,value:function(){return{}}},aborted:{type:Boolean,notify:!0,readOnly:!0,value:!1},errored:{type:Boolean,notify:!0,readOnly:!0,value:!1},timedOut:{type:Boolean,notify:!0,readOnly:!0,value:!1}},get succeeded(){if(this.errored||this.aborted||this.timedOut)return!1;var e=this.xhr.status||0;return 0===e||e>=200&&e<300},send:function(e){var t=this.xhr;if(t.readyState>0)return null;t.addEventListener("progress",function(e){this._setProgress({lengthComputable:e.lengthComputable,loaded:e.loaded,total:e.total})}.bind(this)),t.addEventListener("error",function(e){this._setErrored(!0),this._updateStatus(),this.rejectCompletes(e)}.bind(this)),t.addEventListener("timeout",function(e){this._setTimedOut(!0),this._updateStatus(),this.rejectCompletes(e)}.bind(this)),t.addEventListener("abort",function(){this._updateStatus(),this.rejectCompletes(new Error("Request aborted."))}.bind(this)),t.addEventListener("loadend",function(){return this._updateStatus(),this._setResponse(this.parseResponse()),this.succeeded?void this.resolveCompletes(this):void this.rejectCompletes(new Error("The request failed with status code: "+this.xhr.status))}.bind(this)),this.url=e.url,t.open(e.method||"GET",e.url,e.async!==!1);var r={json:"application/json",text:"text/plain",html:"text/html",xml:"application/xml",arraybuffer:"application/octet-stream"}[e.handleAs],s=e.headers||Object.create(null),n=Object.create(null);for(var o in s)n[o.toLowerCase()]=s[o];if(s=n,r&&!s.accept&&(s.accept=r),Object.keys(s).forEach(function(e){/[A-Z]/.test(e)&&Polymer.Base._error("Headers must be lower case, got",e),t.setRequestHeader(e,s[e])},this),e.async!==!1){e.async&&(t.timeout=e.timeout);var i=e.handleAs;!e.jsonPrefix&&i||(i="text"),t.responseType=t._responseType=i,e.jsonPrefix&&(t._jsonPrefix=e.jsonPrefix)}t.withCredentials=!!e.withCredentials;var a=this._encodeBodyObject(e.body,s["content-type"]);return t.send(a),this.completes},parseResponse:function(){var e=this.xhr,t=e.responseType||e._responseType,r=!this.xhr.responseType,s=e._jsonPrefix&&e._jsonPrefix.length||0;try{switch(t){case"json":if(r||void 0===e.response)try{return JSON.parse(e.responseText)}catch(e){return null}return e.response;case"xml":return e.responseXML;case"blob":case"document":case"arraybuffer":return e.response;case"text":default:if(s)try{return JSON.parse(e.responseText.substring(s))}catch(e){return null}return e.responseText}}catch(e){this.rejectCompletes(new Error("Could not parse response. "+e.message))}},abort:function(){this._setAborted(!0),this.xhr.abort()},_encodeBodyObject:function(e,t){if("string"==typeof e)return e;var r=e;switch(t){case"application/json":return JSON.stringify(r);case"application/x-www-form-urlencoded":return this._wwwFormUrlEncode(r)}return e},_wwwFormUrlEncode:function(e){if(!e)return"";var t=[];return Object.keys(e).forEach(function(r){t.push(this._wwwFormUrlEncodePiece(r)+"="+this._wwwFormUrlEncodePiece(e[r]))},this),t.join("&")},_wwwFormUrlEncodePiece:function(e){return null===e?"":encodeURIComponent(e.toString().replace(/\r?\n/g,"\r\n")).replace(/%20/g,"+")},_updateStatus:function(){this._setStatus(this.xhr.status),this._setStatusText(void 0===this.xhr.statusText?"":this.xhr.statusText)}});</script> <script>"use strict";Polymer({is:"iron-ajax",hostAttributes:{hidden:!0},properties:{url:{type:String},params:{type:Object,value:function(){return{}}},method:{type:String,value:"GET"},headers:{type:Object,value:function(){return{}}},contentType:{type:String,value:null},body:{type:Object,value:null},sync:{type:Boolean,value:!1},handleAs:{type:String,value:"json"},withCredentials:{type:Boolean,value:!1},timeout:{type:Number,value:0},auto:{type:Boolean,value:!1},verbose:{type:Boolean,value:!1},lastRequest:{type:Object,notify:!0,readOnly:!0},loading:{type:Boolean,notify:!0,readOnly:!0},lastResponse:{type:Object,notify:!0,readOnly:!0},lastError:{type:Object,notify:!0,readOnly:!0},activeRequests:{type:Array,notify:!0,readOnly:!0,value:function(){return[]}},debounceDuration:{type:Number,value:0,notify:!0},jsonPrefix:{type:String,value:""},bubbles:{type:Boolean,value:!1},_boundHandleResponse:{type:Function,value:function(){return this._handleResponse.bind(this)}}},observers:["_requestOptionsChanged(url, method, params.*, headers, contentType, body, sync, handleAs, jsonPrefix, withCredentials, timeout, auto)"],get queryString(){var e,t,s=[];for(e in this.params)if(t=this.params[e],e=window.encodeURIComponent(e),Array.isArray(t))for(var n=0;n<t.length;n++)s.push(e+"="+window.encodeURIComponent(t[n]));else null!==t?s.push(e+"="+window.encodeURIComponent(t)):s.push(e);return s.join("&")},get requestUrl(){var e=this.queryString,t=this.url||"";if(e){var s=t.indexOf("?")>=0?"&":"?";return t+s+e}return t},get requestHeaders(){var e={},t=this.contentType;null==t&&"string"==typeof this.body&&(t="application/x-www-form-urlencoded"),t&&(e["content-type"]=t);var s;if(this.headers instanceof Object)for(s in this.headers)e[s]=this.headers[s].toString();return e},toRequestOptions:function(){return{url:this.requestUrl||"",method:this.method,headers:this.requestHeaders,body:this.body,async:!this.sync,handleAs:this.handleAs,jsonPrefix:this.jsonPrefix,withCredentials:this.withCredentials,timeout:this.timeout}},generateRequest:function(){var e=document.createElement("iron-request"),t=this.toRequestOptions();return this.push("activeRequests",e),e.completes.then(this._boundHandleResponse).catch(this._handleError.bind(this,e)).then(this._discardRequest.bind(this,e)),e.send(t),this._setLastRequest(e),this._setLoading(!0),this.fire("request",{request:e,options:t},{bubbles:this.bubbles}),this.fire("iron-ajax-request",{request:e,options:t},{bubbles:this.bubbles}),e},_handleResponse:function(e){e===this.lastRequest&&(this._setLastResponse(e.response),this._setLastError(null),this._setLoading(!1)),this.fire("response",e,{bubbles:this.bubbles}),this.fire("iron-ajax-response",e,{bubbles:this.bubbles})},_handleError:function(e,t){this.verbose&&Polymer.Base._error(t),e===this.lastRequest&&(this._setLastError({request:e,error:t,status:e.xhr.status,statusText:e.xhr.statusText,response:e.xhr.response}),this._setLastResponse(null),this._setLoading(!1)),this.fire("iron-ajax-error",{request:e,error:t},{bubbles:this.bubbles}),this.fire("error",{request:e,error:t},{bubbles:this.bubbles})},_discardRequest:function(e){var t=this.activeRequests.indexOf(e);t>-1&&this.splice("activeRequests",t,1)},_requestOptionsChanged:function(){this.debounce("generate-request",function(){null!=this.url&&this.auto&&this.generateRequest()},this.debounceDuration)}});</script> <script>Promise.all=Promise.all||function(){var r=Array.prototype.slice.call(1===arguments.length&&Array.isArray(arguments[0])?arguments[0]:arguments);return new Promise(function(n,e){function t(i,c){try{if(c&&("object"==typeof c||"function"==typeof c)){var f=c.then;if("function"==typeof f)return void f.call(c,function(r){t(i,r)},e)}r[i]=c,0===--o&&n(r)}catch(r){e(r)}}if(0===r.length)return n([]);for(var o=r.length,i=0;i<r.length;i++)t(i,r[i])})},Promise.race=Promise.race||function(r){var n=r;return new Promise(function(r,e){for(var t=0,o=n.length;t<o;t++)n[t].then(r,e)})};</script> <script>!function(){"use strict";var t=/\.splices$/,e=/\.length$/,i=/\.?#?([0-9]+)$/;Polymer.AppStorageBehavior={properties:{data:{type:Object,notify:!0,value:function(){return this.zeroValue}},sequentialTransactions:{type:Boolean,value:!1},log:{type:Boolean,value:!1}},observers:["__dataChanged(data.*)"],created:function(){this.__initialized=!1,this.__syncingToMemory=!1,this.__initializingStoredValue=null,this.__transactionQueueAdvances=Promise.resolve()},ready:function(){this._initializeStoredValue()},get isNew(){return!0},get transactionsComplete(){return this.__transactionQueueAdvances},get zeroValue(){},save:function(){return Promise.resolve()},reset:function(){},destroy:function(){return this.data=this.zeroValue,this.save()},initializeStoredValue:function(){return this.isNew?Promise.resolve():this._getStoredValue("data").then(function(t){return this._log("Got stored value!",t,this.data),null==t?this._setStoredValue("data",this.data||this.zeroValue):void this.syncToMemory(function(){this.set("data",t)})}.bind(this))},getStoredValue:function(t){return Promise.resolve()},setStoredValue:function(t,e){return Promise.resolve(e)},memoryPathToStoragePath:function(t){return t},storagePathToMemoryPath:function(t){return t},syncToMemory:function(t){this.__syncingToMemory||(this._group("Sync to memory."),this.__syncingToMemory=!0,t.call(this),this.__syncingToMemory=!1,this._groupEnd("Sync to memory."))},valueIsEmpty:function(t){return Array.isArray(t)?0===t.length:Object.prototype.isPrototypeOf(t)?0===Object.keys(t).length:null==t},_getStoredValue:function(t){return this.getStoredValue(this.memoryPathToStoragePath(t))},_setStoredValue:function(t,e){return this.setStoredValue(this.memoryPathToStoragePath(t),e)},_enqueueTransaction:function(t){if(this.sequentialTransactions)t=t.bind(this);else{var e=t.call(this);t=function(){return e}}return this.__transactionQueueAdvances=this.__transactionQueueAdvances.then(t).catch(function(t){this._error("Error performing queued transaction.",t)}.bind(this))},_log:function(){this.log&&console.log.apply(console,arguments)},_error:function(){this.log&&console.error.apply(console,arguments)},_group:function(){this.log&&console.group.apply(console,arguments)},_groupEnd:function(){this.log&&console.groupEnd.apply(console,arguments)},_initializeStoredValue:function(){if(!this.__initializingStoredValue){this._group("Initializing stored value.");var t=this.__initializingStoredValue=this.initializeStoredValue().then(function(){this.__initialized=!0,this.__initializingStoredValue=null,this._groupEnd("Initializing stored value.")}.bind(this));return this._enqueueTransaction(function(){return t})}},__dataChanged:function(t){if(!this.isNew&&!this.__syncingToMemory&&this.__initialized&&!this.__pathCanBeIgnored(t.path)){var e=this.__normalizeMemoryPath(t.path),i=t.value,n=i&&i.indexSplices;this._enqueueTransaction(function(){return this._log("Setting",e+":",n||i),n&&this.__pathIsSplices(e)&&(e=this.__parentPath(e),i=this.get(e)),this._setStoredValue(e,i)})}},__normalizeMemoryPath:function(t){for(var e=t.split("."),i=[],n=[],r=[],o=0;o<e.length;++o)n.push(e[o]),/^#/.test(e[o])?r.push(this.get(i).indexOf(this.get(n))):r.push(e[o]),i.push(e[o]);return r.join(".")},__parentPath:function(t){var e=t.split(".");return e.slice(0,e.length-1).join(".")},__pathCanBeIgnored:function(t){return e.test(t)&&Array.isArray(this.get(this.__parentPath(t)))},__pathIsSplices:function(e){return t.test(e)&&Array.isArray(this.get(this.__parentPath(e)))},__pathRefersToArray:function(i){return(t.test(i)||e.test(i))&&Array.isArray(this.get(this.__parentPath(i)))},__pathTailToIndex:function(t){var e=t.split(".").pop();return window.parseInt(e.replace(i,"$1"),10)}}}();</script> <dom-module id="app-localstorage-document" assetpath="..\bower_components\app-storage\app-localstorage\"> <script>"use strict";Polymer({is:"app-localstorage-document",behaviors:[Polymer.AppStorageBehavior],properties:{key:{type:String,notify:!0},sessionOnly:{type:Boolean,value:!1},storage:{type:Object,computed:"__computeStorage(sessionOnly)"}},observers:["__storageSourceChanged(storage, key)"],attached:function(){this.listen(window,"storage","__onStorage"),this.listen(window.top,"app-local-storage-changed","__onAppLocalStorageChanged")},detached:function(){this.unlisten(window,"storage","__onStorage"),this.unlisten(window.top,"app-local-storage-changed","__onAppLocalStorageChanged")},get isNew(){return!this.key},save:function(e){try{this.__setStorageValue(e,this.data)}catch(e){return Promise.reject(e)}return this.key=e,Promise.resolve()},reset:function(){this.key=null,this.data=this.zeroValue},destroy:function(){try{this.storage.removeItem(this.key),this.reset()}catch(e){return Promise.reject(e)}return Promise.resolve()},getStoredValue:function(e){var t;if(null!=this.key)try{t=this.__parseValueFromStorage(),t=null!=t?this.get(e,{data:t}):void 0}catch(e){return Promise.reject(e)}return Promise.resolve(t)},setStoredValue:function(e,t){if(null!=this.key){try{this.__setStorageValue(this.key,this.data)}catch(e){return Promise.reject(e)}this.fire("app-local-storage-changed",this,{node:window.top})}return Promise.resolve(t)},__computeStorage:function(e){return e?window.sessionStorage:window.localStorage},__storageSourceChanged:function(e,t){this._initializeStoredValue()},__onStorage:function(e){e.key===this.key&&e.storageArea===this.storage&&this.syncToMemory(function(){this.set("data",this.__parseValueFromStorage())})},__onAppLocalStorageChanged:function(e){e.detail!==this&&e.detail.key===this.key&&e.detail.storage===this.storage&&this.syncToMemory(function(){this.set("data",e.detail.data)})},__parseValueFromStorage:function(){try{return JSON.parse(this.storage.getItem(this.key))}catch(e){console.error("Failed to parse value from storage for",this.key)}},__setStorageValue:function(e,t){this.storage.setItem(this.key,JSON.stringify(this.data))}});</script> </dom-module> <dom-module id="pd-data"> <template> <iron-ajax auto="" url="../data/foods.json" handle-as="json" on-response="handleResponse"></iron-ajax> <app-localstorage-document key="weeklyProducts" data="{{weeklyProducts}}"></app-localstorage-document> </template> <script>!function(){Polymer({is:"pd-data",properties:{foodData:{type:Array,value:[],notify:!0},weeklyProducts:{type:Array,value:[],notify:!0}},handleResponse:function(e){var t=e.detail.response;t.unshift("foodData"),this.push.apply(this,t)}})}();</script> </dom-module></div><dom-module id="glu-polydiet"> <template> <style include="shared-styles">:host {
+      }</style> <div class="columns"> <template is="dom-repeat" items="[[nutrients]]" as="nutrient"> <div class="element"> <h4>[[nutrient.name]]</h4> <glu-progress text="[[formatAmount(sums, nutrient.sumPath)]]/[[formatAmount(nutrient, 'weeklyGoal')]]" current="[[get(nutrient.sumPath, sums)]]" limit="[[nutrient.weeklyGoal]]"></glu-progress> </div></template> </div> </template> <script>!function(){"use strict";Polymer({is:"weekly-stats",properties:{nutrients:{type:Array,value:[]},sums:{type:Array,value:[]}},behaviors:[GluBehaviors.Formatters]})}();</script> </dom-module> <script>function MakePromise(t){function e(t){if("object"!=typeof this||"function"!=typeof t)throw new TypeError;this._state=null,this._value=null,this._deferreds=[],u(t,i.bind(this),r.bind(this))}function n(e){var n=this;return null===this._state?void this._deferreds.push(e):void t(function(){var t=n._state?e.onFulfilled:e.onRejected;if("function"!=typeof t)return void(n._state?e.resolve:e.reject)(n._value);var i;try{i=t(n._value)}catch(t){return void e.reject(t)}e.resolve(i)})}function i(t){try{if(t===this)throw new TypeError;if(t&&("object"==typeof t||"function"==typeof t)){var e=t.then;if("function"==typeof e)return void u(e.bind(t),i.bind(this),r.bind(this))}this._state=!0,this._value=t,o.call(this)}catch(t){r.call(this,t)}}function r(t){this._state=!1,this._value=t,o.call(this)}function o(){for(var t=0,e=this._deferreds.length;t<e;t++)n.call(this,this._deferreds[t]);this._deferreds=null}function u(t,e,n){var i=!1;try{t(function(t){i||(i=!0,e(t))},function(t){i||(i=!0,n(t))})}catch(t){if(i)return;i=!0,n(t)}}return e.prototype.catch=function(t){return this.then(null,t)},e.prototype.then=function(t,i){var r=this;return new e(function(e,o){n.call(r,{onFulfilled:t,onRejected:i,resolve:e,reject:o})})},e.resolve=function(t){return t&&"object"==typeof t&&t.constructor===e?t:new e(function(e){e(t)})},e.reject=function(t){return new e(function(e,n){n(t)})},e}"undefined"!=typeof module&&(module.exports=MakePromise);</script> <script>window.Promise||(window.Promise=MakePromise(Polymer.Base.async));</script> <script>"use strict";Polymer({is:"iron-request",hostAttributes:{hidden:!0},properties:{xhr:{type:Object,notify:!0,readOnly:!0,value:function(){return new XMLHttpRequest}},response:{type:Object,notify:!0,readOnly:!0,value:function(){return null}},status:{type:Number,notify:!0,readOnly:!0,value:0},statusText:{type:String,notify:!0,readOnly:!0,value:""},completes:{type:Object,readOnly:!0,notify:!0,value:function(){return new Promise(function(e,t){this.resolveCompletes=e,this.rejectCompletes=t}.bind(this))}},progress:{type:Object,notify:!0,readOnly:!0,value:function(){return{}}},aborted:{type:Boolean,notify:!0,readOnly:!0,value:!1},errored:{type:Boolean,notify:!0,readOnly:!0,value:!1},timedOut:{type:Boolean,notify:!0,readOnly:!0,value:!1}},get succeeded(){if(this.errored||this.aborted||this.timedOut)return!1;var e=this.xhr.status||0;return 0===e||e>=200&&e<300},send:function(e){var t=this.xhr;if(t.readyState>0)return null;t.addEventListener("progress",function(e){this._setProgress({lengthComputable:e.lengthComputable,loaded:e.loaded,total:e.total})}.bind(this)),t.addEventListener("error",function(e){this._setErrored(!0),this._updateStatus(),this.rejectCompletes(e)}.bind(this)),t.addEventListener("timeout",function(e){this._setTimedOut(!0),this._updateStatus(),this.rejectCompletes(e)}.bind(this)),t.addEventListener("abort",function(){this._updateStatus(),this.rejectCompletes(new Error("Request aborted."))}.bind(this)),t.addEventListener("loadend",function(){return this._updateStatus(),this._setResponse(this.parseResponse()),this.succeeded?void this.resolveCompletes(this):void this.rejectCompletes(new Error("The request failed with status code: "+this.xhr.status))}.bind(this)),this.url=e.url,t.open(e.method||"GET",e.url,e.async!==!1);var r={json:"application/json",text:"text/plain",html:"text/html",xml:"application/xml",arraybuffer:"application/octet-stream"}[e.handleAs],s=e.headers||Object.create(null),n=Object.create(null);for(var o in s)n[o.toLowerCase()]=s[o];if(s=n,r&&!s.accept&&(s.accept=r),Object.keys(s).forEach(function(e){/[A-Z]/.test(e)&&Polymer.Base._error("Headers must be lower case, got",e),t.setRequestHeader(e,s[e])},this),e.async!==!1){e.async&&(t.timeout=e.timeout);var i=e.handleAs;!e.jsonPrefix&&i||(i="text"),t.responseType=t._responseType=i,e.jsonPrefix&&(t._jsonPrefix=e.jsonPrefix)}t.withCredentials=!!e.withCredentials;var a=this._encodeBodyObject(e.body,s["content-type"]);return t.send(a),this.completes},parseResponse:function(){var e=this.xhr,t=e.responseType||e._responseType,r=!this.xhr.responseType,s=e._jsonPrefix&&e._jsonPrefix.length||0;try{switch(t){case"json":if(r||void 0===e.response)try{return JSON.parse(e.responseText)}catch(e){return null}return e.response;case"xml":return e.responseXML;case"blob":case"document":case"arraybuffer":return e.response;case"text":default:if(s)try{return JSON.parse(e.responseText.substring(s))}catch(e){return null}return e.responseText}}catch(e){this.rejectCompletes(new Error("Could not parse response. "+e.message))}},abort:function(){this._setAborted(!0),this.xhr.abort()},_encodeBodyObject:function(e,t){if("string"==typeof e)return e;var r=e;switch(t){case"application/json":return JSON.stringify(r);case"application/x-www-form-urlencoded":return this._wwwFormUrlEncode(r)}return e},_wwwFormUrlEncode:function(e){if(!e)return"";var t=[];return Object.keys(e).forEach(function(r){t.push(this._wwwFormUrlEncodePiece(r)+"="+this._wwwFormUrlEncodePiece(e[r]))},this),t.join("&")},_wwwFormUrlEncodePiece:function(e){return null===e?"":encodeURIComponent(e.toString().replace(/\r?\n/g,"\r\n")).replace(/%20/g,"+")},_updateStatus:function(){this._setStatus(this.xhr.status),this._setStatusText(void 0===this.xhr.statusText?"":this.xhr.statusText)}});</script> <script>"use strict";Polymer({is:"iron-ajax",hostAttributes:{hidden:!0},properties:{url:{type:String},params:{type:Object,value:function(){return{}}},method:{type:String,value:"GET"},headers:{type:Object,value:function(){return{}}},contentType:{type:String,value:null},body:{type:Object,value:null},sync:{type:Boolean,value:!1},handleAs:{type:String,value:"json"},withCredentials:{type:Boolean,value:!1},timeout:{type:Number,value:0},auto:{type:Boolean,value:!1},verbose:{type:Boolean,value:!1},lastRequest:{type:Object,notify:!0,readOnly:!0},loading:{type:Boolean,notify:!0,readOnly:!0},lastResponse:{type:Object,notify:!0,readOnly:!0},lastError:{type:Object,notify:!0,readOnly:!0},activeRequests:{type:Array,notify:!0,readOnly:!0,value:function(){return[]}},debounceDuration:{type:Number,value:0,notify:!0},jsonPrefix:{type:String,value:""},bubbles:{type:Boolean,value:!1},_boundHandleResponse:{type:Function,value:function(){return this._handleResponse.bind(this)}}},observers:["_requestOptionsChanged(url, method, params.*, headers, contentType, body, sync, handleAs, jsonPrefix, withCredentials, timeout, auto)"],get queryString(){var e,t,s=[];for(e in this.params)if(t=this.params[e],e=window.encodeURIComponent(e),Array.isArray(t))for(var n=0;n<t.length;n++)s.push(e+"="+window.encodeURIComponent(t[n]));else null!==t?s.push(e+"="+window.encodeURIComponent(t)):s.push(e);return s.join("&")},get requestUrl(){var e=this.queryString,t=this.url||"";if(e){var s=t.indexOf("?")>=0?"&":"?";return t+s+e}return t},get requestHeaders(){var e={},t=this.contentType;null==t&&"string"==typeof this.body&&(t="application/x-www-form-urlencoded"),t&&(e["content-type"]=t);var s;if(this.headers instanceof Object)for(s in this.headers)e[s]=this.headers[s].toString();return e},toRequestOptions:function(){return{url:this.requestUrl||"",method:this.method,headers:this.requestHeaders,body:this.body,async:!this.sync,handleAs:this.handleAs,jsonPrefix:this.jsonPrefix,withCredentials:this.withCredentials,timeout:this.timeout}},generateRequest:function(){var e=document.createElement("iron-request"),t=this.toRequestOptions();return this.push("activeRequests",e),e.completes.then(this._boundHandleResponse).catch(this._handleError.bind(this,e)).then(this._discardRequest.bind(this,e)),e.send(t),this._setLastRequest(e),this._setLoading(!0),this.fire("request",{request:e,options:t},{bubbles:this.bubbles}),this.fire("iron-ajax-request",{request:e,options:t},{bubbles:this.bubbles}),e},_handleResponse:function(e){e===this.lastRequest&&(this._setLastResponse(e.response),this._setLastError(null),this._setLoading(!1)),this.fire("response",e,{bubbles:this.bubbles}),this.fire("iron-ajax-response",e,{bubbles:this.bubbles})},_handleError:function(e,t){this.verbose&&Polymer.Base._error(t),e===this.lastRequest&&(this._setLastError({request:e,error:t,status:e.xhr.status,statusText:e.xhr.statusText,response:e.xhr.response}),this._setLastResponse(null),this._setLoading(!1)),this.fire("iron-ajax-error",{request:e,error:t},{bubbles:this.bubbles}),this.fire("error",{request:e,error:t},{bubbles:this.bubbles})},_discardRequest:function(e){var t=this.activeRequests.indexOf(e);t>-1&&this.splice("activeRequests",t,1)},_requestOptionsChanged:function(){this.debounce("generate-request",function(){null!=this.url&&this.auto&&this.generateRequest()},this.debounceDuration)}});</script> <script>Promise.all=Promise.all||function(){var r=Array.prototype.slice.call(1===arguments.length&&Array.isArray(arguments[0])?arguments[0]:arguments);return new Promise(function(n,e){function t(i,c){try{if(c&&("object"==typeof c||"function"==typeof c)){var f=c.then;if("function"==typeof f)return void f.call(c,function(r){t(i,r)},e)}r[i]=c,0===--o&&n(r)}catch(r){e(r)}}if(0===r.length)return n([]);for(var o=r.length,i=0;i<r.length;i++)t(i,r[i])})},Promise.race=Promise.race||function(r){var n=r;return new Promise(function(r,e){for(var t=0,o=n.length;t<o;t++)n[t].then(r,e)})};</script> <script>!function(){"use strict";var t=/\.splices$/,e=/\.length$/,i=/\.?#?([0-9]+)$/;Polymer.AppStorageBehavior={properties:{data:{type:Object,notify:!0,value:function(){return this.zeroValue}},sequentialTransactions:{type:Boolean,value:!1},log:{type:Boolean,value:!1}},observers:["__dataChanged(data.*)"],created:function(){this.__initialized=!1,this.__syncingToMemory=!1,this.__initializingStoredValue=null,this.__transactionQueueAdvances=Promise.resolve()},ready:function(){this._initializeStoredValue()},get isNew(){return!0},get transactionsComplete(){return this.__transactionQueueAdvances},get zeroValue(){},save:function(){return Promise.resolve()},reset:function(){},destroy:function(){return this.data=this.zeroValue,this.save()},initializeStoredValue:function(){return this.isNew?Promise.resolve():this._getStoredValue("data").then(function(t){return this._log("Got stored value!",t,this.data),null==t?this._setStoredValue("data",this.data||this.zeroValue):void this.syncToMemory(function(){this.set("data",t)})}.bind(this))},getStoredValue:function(t){return Promise.resolve()},setStoredValue:function(t,e){return Promise.resolve(e)},memoryPathToStoragePath:function(t){return t},storagePathToMemoryPath:function(t){return t},syncToMemory:function(t){this.__syncingToMemory||(this._group("Sync to memory."),this.__syncingToMemory=!0,t.call(this),this.__syncingToMemory=!1,this._groupEnd("Sync to memory."))},valueIsEmpty:function(t){return Array.isArray(t)?0===t.length:Object.prototype.isPrototypeOf(t)?0===Object.keys(t).length:null==t},_getStoredValue:function(t){return this.getStoredValue(this.memoryPathToStoragePath(t))},_setStoredValue:function(t,e){return this.setStoredValue(this.memoryPathToStoragePath(t),e)},_enqueueTransaction:function(t){if(this.sequentialTransactions)t=t.bind(this);else{var e=t.call(this);t=function(){return e}}return this.__transactionQueueAdvances=this.__transactionQueueAdvances.then(t).catch(function(t){this._error("Error performing queued transaction.",t)}.bind(this))},_log:function(){this.log&&console.log.apply(console,arguments)},_error:function(){this.log&&console.error.apply(console,arguments)},_group:function(){this.log&&console.group.apply(console,arguments)},_groupEnd:function(){this.log&&console.groupEnd.apply(console,arguments)},_initializeStoredValue:function(){if(!this.__initializingStoredValue){this._group("Initializing stored value.");var t=this.__initializingStoredValue=this.initializeStoredValue().then(function(){this.__initialized=!0,this.__initializingStoredValue=null,this._groupEnd("Initializing stored value.")}.bind(this));return this._enqueueTransaction(function(){return t})}},__dataChanged:function(t){if(!this.isNew&&!this.__syncingToMemory&&this.__initialized&&!this.__pathCanBeIgnored(t.path)){var e=this.__normalizeMemoryPath(t.path),i=t.value,n=i&&i.indexSplices;this._enqueueTransaction(function(){return this._log("Setting",e+":",n||i),n&&this.__pathIsSplices(e)&&(e=this.__parentPath(e),i=this.get(e)),this._setStoredValue(e,i)})}},__normalizeMemoryPath:function(t){for(var e=t.split("."),i=[],n=[],r=[],o=0;o<e.length;++o)n.push(e[o]),/^#/.test(e[o])?r.push(this.get(i).indexOf(this.get(n))):r.push(e[o]),i.push(e[o]);return r.join(".")},__parentPath:function(t){var e=t.split(".");return e.slice(0,e.length-1).join(".")},__pathCanBeIgnored:function(t){return e.test(t)&&Array.isArray(this.get(this.__parentPath(t)))},__pathIsSplices:function(e){return t.test(e)&&Array.isArray(this.get(this.__parentPath(e)))},__pathRefersToArray:function(i){return(t.test(i)||e.test(i))&&Array.isArray(this.get(this.__parentPath(i)))},__pathTailToIndex:function(t){var e=t.split(".").pop();return window.parseInt(e.replace(i,"$1"),10)}}}();</script> <dom-module id="app-localstorage-document" assetpath="..\bower_components\app-storage\app-localstorage\"> <script>"use strict";Polymer({is:"app-localstorage-document",behaviors:[Polymer.AppStorageBehavior],properties:{key:{type:String,notify:!0},sessionOnly:{type:Boolean,value:!1},storage:{type:Object,computed:"__computeStorage(sessionOnly)"}},observers:["__storageSourceChanged(storage, key)"],attached:function(){this.listen(window,"storage","__onStorage"),this.listen(window.top,"app-local-storage-changed","__onAppLocalStorageChanged")},detached:function(){this.unlisten(window,"storage","__onStorage"),this.unlisten(window.top,"app-local-storage-changed","__onAppLocalStorageChanged")},get isNew(){return!this.key},save:function(e){try{this.__setStorageValue(e,this.data)}catch(e){return Promise.reject(e)}return this.key=e,Promise.resolve()},reset:function(){this.key=null,this.data=this.zeroValue},destroy:function(){try{this.storage.removeItem(this.key),this.reset()}catch(e){return Promise.reject(e)}return Promise.resolve()},getStoredValue:function(e){var t;if(null!=this.key)try{t=this.__parseValueFromStorage(),t=null!=t?this.get(e,{data:t}):void 0}catch(e){return Promise.reject(e)}return Promise.resolve(t)},setStoredValue:function(e,t){if(null!=this.key){try{this.__setStorageValue(this.key,this.data)}catch(e){return Promise.reject(e)}this.fire("app-local-storage-changed",this,{node:window.top})}return Promise.resolve(t)},__computeStorage:function(e){return e?window.sessionStorage:window.localStorage},__storageSourceChanged:function(e,t){this._initializeStoredValue()},__onStorage:function(e){e.key===this.key&&e.storageArea===this.storage&&this.syncToMemory(function(){this.set("data",this.__parseValueFromStorage())})},__onAppLocalStorageChanged:function(e){e.detail!==this&&e.detail.key===this.key&&e.detail.storage===this.storage&&this.syncToMemory(function(){this.set("data",e.detail.data)})},__parseValueFromStorage:function(){try{return JSON.parse(this.storage.getItem(this.key))}catch(e){console.error("Failed to parse value from storage for",this.key)}},__setStorageValue:function(e,t){this.storage.setItem(this.key,JSON.stringify(this.data))}});</script> </dom-module> <dom-module id="pd-data"> <template> <iron-ajax auto="" url="../data/foods.json" handle-as="json" on-response="handleResponse"></iron-ajax> <app-localstorage-document key="weeklyProducts" data="{{weeklyProducts}}"></app-localstorage-document> </template> <script>!function(){var a=[{name:"kcal",goal:1585,hidden:!1,id:6},{name:"Tłuszcz (g)",goal:120,hidden:!1,id:1},{name:"Białko (g)",goal:80,hidden:!1,id:0},{name:"Węglowodany (g)",goal:50,hidden:!1,id:4},{name:"Alkohol (g)",goal:0,hidden:!0,id:35},{name:"Beta-karoten (ug)",goal:2e3,hidden:!0,id:21},{name:"Błonnik (g)",goal:30,hidden:!0,id:7},{name:"Cholesterol (mg)",goal:400,hidden:!0,id:8},{name:"Cholina (mg)",goal:550,hidden:!0,id:33},{name:"Cukry (g)",goal:10,hidden:!0,id:5},{name:"Cynk (mg)",goal:11,hidden:!0,id:15},{name:"Fluor (ug)",goal:4,hidden:!0,id:17},{name:"Foliany (ug)",goal:400,hidden:!0,id:30},{name:"Fosfor (mg)",goal:700,hidden:!0,id:13},{name:"Kofeina (mg)",goal:0,hidden:!0,id:36},{name:"Kwas pantotenowy (mg)",goal:5,hidden:!0,id:28},{name:"Likopen (ug)",goal:3.5,hidden:!0,id:37},{name:"Luteina (ug)",goal:3,hidden:!0,id:38},{name:"Magnez (mg)",goal:420,hidden:!0,id:12},{name:"Mangan (mg)",goal:2,hidden:!0,id:18},{name:"Miedź (mg)",goal:.9,hidden:!0,id:16},{name:"Niacyna, B3 (mg)",goal:16,hidden:!0,id:27},{name:"Potas (mg)",goal:4700,hidden:!0,id:14},{name:"Ryboflawina, B2 (mg)",goal:1.3,hidden:!0,id:26},{name:"Selen (ug)",goal:55,hidden:!0,id:19},{name:"Sód (mg)",goal:2300,hidden:!0,id:9},{name:"Tiamina, B1 (mg)",goal:1.3,hidden:!0,id:25},{name:"Tłuszcz nas. (g)",goal:40,hidden:!0,id:2},{name:"Tłuszcz trans. (g)",goal:0,hidden:!0,id:3},{name:"Tłuszcz nienas. (g)",goal:60,hidden:!0,id:39},{name:"Tłuszcz n-3 (g)",goal:10,hidden:!0,id:41},{name:"Tłuszcz n-6 (g)",goal:10,hidden:!0,id:42},{name:"Tłuszcz wielonie. (g)",goal:20,hidden:!0,id:40},{name:"Wapń (mg)",goal:1e3,hidden:!0,id:10},{name:"Witamin A, RAE (ug)",goal:900,hidden:!0,id:20},{name:"Witamina B6 (mg)",goal:1.4,hidden:!0,id:29},{name:"Witamina B12 (ug)",goal:2.4,hidden:!0,id:31},{name:"Witamina C (mg)",goal:90,hidden:!0,id:24},{name:"Witamina D (ug)",goal:15,hidden:!0,id:23},{name:"Witamina E (mg)",goal:10,hidden:!0,id:22},{name:"Witamina K (ug)",goal:65,hidden:!0,id:32},{name:"Woda (g)",goal:2e3,hidden:!0,id:34},{name:"Żelazo (mg)",goal:10,hidden:!0,id:11}];Polymer({is:"pd-data",properties:{foodData:{type:Array,value:[],notify:!0},weeklyProducts:{type:Array,value:[],notify:!0},nutrients:{type:Array,notify:!0,value:a.map(function(a,d){return a.path="n."+a.id,a.sumPath=""+(a.id+1),a.weeklyGoal=7*a.goal,a})}},handleResponse:function(a){var d=a.detail.response;d.unshift("foodData"),this.push.apply(this,d)}})}();</script> </dom-module></div><dom-module id="glu-polydiet"> <template> <style include="shared-styles">:host {
         display: block;
       }
       
@@ -2842,4 +2765,10 @@ this.currentTarget=t,this.defaultPrevented=!1,this.eventPhase=Event.AT_TARGET,th
       
       #tabs {
         margin-bottom: 10px;
-      }</style> <pd-data id="data" food-data="{{foods}}" weekly-products="{{weeklyProducts}}"></pd-data> <div class="container"> <app-header reveals=""> <app-toolbar> <paper-menu-button> <paper-icon-button icon="polydiet-icons:menu" class="dropdown-trigger"></paper-icon-button> <paper-menu class="dropdown-content" id="nutrientsMenu"> <template is="dom-repeat" items="{{nutrients}}" as="nutrient"> <paper-item role="menuitemcheckbox"> <paper-item-body> <paper-checkbox checked="{{!nutrient.hidden}}">[[nutrient.name]]</paper-checkbox> </paper-item-body> </paper-item> </template> </paper-menu> </paper-menu-button> <div main-title="">PolyDiet</div> </app-toolbar> </app-header> <section role="main" id="mainSection"> <paper-tabs selected="{{selectedTab}}" no-slide="" id="tabs"> <paper-tab>Tygodniówka</paper-tab> <paper-tab>Produkty</paper-tab> <paper-tab>Statystyki</paper-tab> </paper-tabs> <iron-pages selected="{{selectedTab}}"> <div> <weekly-grid id="weeklyList" nutrients="[[nutrients]]" products="[[weeklyProducts]]" sums="[[sums]]" on-remove-used="removeFoodsFromList" on-amount-updated="updateAmount"> </weekly-grid></div> <div> <foods-grid id="foodsList" foods="[[foods]]" nutrients="[[nutrients]]" on-add-to-list="addFoodToList"></foods-grid> </div> <div> <weekly-stats nutrients="[[nutrients]]" sums="[[sums]]" id="weeklyStats"></weekly-stats> </div> </iron-pages> </section> <footer> <p class="info">Dane o składnikach odżywczych pochodzą z ogólnodostępnej bazy <a href="https://www.ars.usda.gov/northeast-area/beltsville-md/beltsville-human-nutrition-research-center/nutrient-data-laboratory/docs/usda-national-nutrient-database-for-standard-reference/">USDA</a>.</p> </footer> </div> </template> <script>Polymer({is:"glu-polydiet",properties:{selectedTab:{type:Number,value:0},foods:{type:Array,notify:!0,value:[]},weeklyProducts:{type:Array,notify:!0,value:[]},sums:{type:Array,value:Array.apply(null,{length:44}).map(function(){return 0})}},behaviors:[GluBehaviors.Nutrients],observers:["recalculateSums(weeklyProducts.*)"],recalculateSums:function(e){this.sums&&(this.sums=this.sums.map(function(t,u){var r=e.base.reduce(function(e,t){var r=0===u?t.a:t.n[u-1];return r>0?e+r:e},0);return r}))},_recalculateValues:function(e,t){e.n=e.n.map(function(e){return e>0?t*e:e})},addFoodToList:function(e,t){var u,r;t.amount>0&&(r=this.weeklyProducts.filter(function(e){return e.id===t.food.id}),r.length>0&&(t.amount+=r[0].a,this.splice("weeklyProducts",this.weeklyProducts.indexOf(r[0]),1)),u=Object.assign({},t.food,{a:t.amount}),this._recalculateValues(u,u.a/100),this.push("weeklyProducts",u))},updateAmount:function(e,t){var u;u=this.weeklyProducts.filter(function(e){return e.id===t.id})[0],this._recalculateValues(u,t.value/u.a),u.a=t.value,this.notifyPath(["weeklyProducts",this.weeklyProducts.indexOf(u),"n"])},removeFoodsFromList:function(e,t){t.products.forEach(function(e){for(var t=0;t<this.weeklyProducts.length;t++)if(this.weeklyProducts[t].id===e.id)return void this.splice("weeklyProducts",t,1)}.bind(this))}});</script> </dom-module></body></html>
+      }
+
+      #nutrientsMenu {
+        list-style-type: none;
+        padding: 0.2rem 1rem;
+        margin: 0;
+      }</style> <pd-data id="data" food-data="{{foods}}" weekly-products="{{weeklyProducts}}" nutrients="{{nutrients}}"></pd-data> <div class="container"> <app-header reveals=""> <app-toolbar> <div main-title="">PolyDiet</div> <paper-menu-button horizontal-align="right">s <paper-icon-button icon="polydiet-icons:view-column" class="dropdown-trigger" title="Wybierz kolumny do wyświetlenia"></paper-icon-button> <ol class="dropdown-content" id="nutrientsMenu"> <template is="dom-repeat" items="{{nutrients}}" as="nutrient"> <li><paper-checkbox checked="{{!nutrient.hidden}}">[[nutrient.name]]</paper-checkbox></li> </template> </ol> </paper-menu-button> </app-toolbar> </app-header> <section role="main" id="mainSection"> <paper-tabs selected="{{selectedTab}}" no-slide="" id="tabs"> <paper-tab>Tygodniówka</paper-tab> <paper-tab>Produkty</paper-tab> <paper-tab>Statystyki</paper-tab> </paper-tabs> <iron-pages selected="[[selectedTab]]"> <div> <weekly-grid id="weeklyList" nutrients="[[nutrients]]" products="[[weeklyProducts]]" sums="[[sums]]" on-remove-used="removeFoodsFromList" on-amount-updated="updateAmount" on-title-updated="updateTitle" on-recipe-used="createRecipe"> </weekly-grid></div> <div> <foods-grid id="foodsList" foods="[[foods]]" nutrients="[[nutrients]]" on-add-to-list="addFoodToList"></foods-grid> </div> <div> <weekly-stats nutrients="[[nutrients]]" sums="[[sums]]" id="weeklyStats"></weekly-stats> </div> </iron-pages> </section> <footer> <p class="info">Dane o składnikach odżywczych pochodzą z ogólnodostępnej bazy <a href="https://www.ars.usda.gov/northeast-area/beltsville-md/beltsville-human-nutrition-research-center/nutrient-data-laboratory/docs/usda-national-nutrient-database-for-standard-reference/">USDA</a>.</p> </footer> </div> </template> <script>Polymer({is:"glu-polydiet",properties:{selectedTab:{type:Number,value:0},foods:{type:Array,notify:!0,value:[]},weeklyProducts:{type:Array,notify:!0,value:[]},nutrients:{type:Array,notify:!0},sums:{type:Array,value:Array.apply(null,{length:44}).map(function(){return 0})}},observers:["recalculateSums(weeklyProducts.*)"],_recalculateValues:function(t,e){t.n=t.n.map(function(t){return t>0?e*t:t})},_findById:function(t){return this.weeklyProducts.filter(function(e){return e.id===t})},recalculateSums:function(t){this.sums&&(this.sums=this.sums.map(function(e,n){var u=t.base.reduce(function(t,e){var u=0===n?e.a:e.n[n-1];return u>0?t+u:t},0);return u}))},addFoodToList:function(t,e){var n,u;e.amount>0&&(e.allowDuplicates||(u=this._findById(e.food.id),u.length>0&&(e.amount+=u[0].a,this.splice("weeklyProducts",this.weeklyProducts.indexOf(u[0]),1))),n=Object.assign({},e.food,{a:e.amount}),this._recalculateValues(n,n.a/100),this.push("weeklyProducts",n))},updateAmount:function(t,e){var n;n=this._findById(e.id)[0],this._recalculateValues(n,e.value/n.a),n.a=e.value,this.notifyPath(["weeklyProducts",this.weeklyProducts.indexOf(n),"n"])},updateTitle:function(t,e){var n;n=this._findById(e.id)[0],n.t=e.value,this.notifyPath(["weeklyProducts",this.weeklyProducts.indexOf(n),"t"])},removeFoodsFromList:function(t,e){e.products.forEach(function(t){for(var e=0;e<this.weeklyProducts.length;e++)if(this.weeklyProducts[e].id===t.id)return void this.splice("weeklyProducts",e,1)}.bind(this))},createRecipe:function(t,e){var n=e.products.reduce(function(t,e,n){return t.t+=(n?", ":"")+e.t,t.a+=e.a,t.n=t.n.map(function(t,n){return t===-1?e.n[n]:t+e.n[n]}),t},{id:"_"+Date.now(),t:"Przepis: ",a:0,n:this.nutrients.map(function(){return-1})});this.removeFoodsFromList(void 0,e),this.push("weeklyProducts",n)}});</script> </dom-module></body></html>
