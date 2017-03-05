@@ -4,6 +4,7 @@
   <template>
     <iron-ajax auto url="../data/foods.json" handle-as="json" on-response="handleResponse"></iron-ajax>
     <app-localstorage-document key="weeklyProducts" data="{{weeklyProducts}}"></app-localstorage-document>
+    <app-localstorage-document key="izz" data="{{izz}}"></app-localstorage-document>
   </template>
   <script>
     (function () {
@@ -105,13 +106,13 @@
         },
         {
           name: 'Likopen (ug)',
-          goal: 3.5,
+          goal: 3500,
           hidden: true,
           id: 37
         },
         {
           name: 'Luteina (ug)',
-          goal: 3,
+          goal: 3000,
           hidden: true,
           id: 38
         },
@@ -280,6 +281,12 @@
             value: [],
             notify: true
           },
+          izz: {
+            type: Array,
+            value: [],
+            notify: true,
+            observer: 'izzChanged'
+          },
           nutrients: {
             type: Array,
             notify: true,
@@ -296,6 +303,12 @@
           // inline edit, but not a problem in this case
           data.unshift('foodData');
           this.push.apply(this, data);
+        },
+        izzChanged: function(data) {
+          if (data.length > 0) {
+            // time consuming, but well...
+            this.push.apply(this, ['foodData'].concat(data));
+          }
         }
       });
     })();

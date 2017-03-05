@@ -10,6 +10,7 @@
 <link rel="import" href="shared/polydiet-icons.html">
 <link rel="import" href="shared/shared-styles.html">
 <link rel="import" href="shared/formatters-behavior.html">
+<link rel="import" href="shared/product-details.html">
 <dom-module id="foods-grid">
   <template>
     <style include="shared-styles">
@@ -29,6 +30,9 @@
       }
     </style>
     <vaadin-grid id="grid" items="[[foods]]" active-item="{{activeItem}}">
+      <template class="row-details">
+        <product-details product="[[item]]" nutrients="[[nutrients]]"></product-details>
+      </template>
       <vaadin-grid-column frozen resizable width="200px">
         <template class="header">
           <vaadin-grid-sorter path="t" direction="asc">Produkt</vaadin-grid-sorter>
@@ -48,6 +52,9 @@
           </vaadin-grid-column>
         </template>
       </template>
+      <vaadin-grid-column width="100px">
+        <paper-button toggles active="{{expanded}}">Szczegóły</paper-button>
+      </vaadin-grid-column>
     </vaadin-grid>
     <div class="grid-actions">
       <paper-fab icon="polydiet-icons:add" id="addFood" disabled="[[!isFoodSelected]]" on-tap="openAddFoodModal" title="Dodaj zaznaczony produkt do tygodniówki"></paper-fab>

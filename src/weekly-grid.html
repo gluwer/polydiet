@@ -4,11 +4,13 @@
 <!--<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-sorter.html">-->
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="shared/polydiet-icons.html">
 <link rel="import" href="shared/formatters-behavior.html">
 <link rel="import" href="shared/shared-styles.html">
 <link rel="import" href="shared/glu-progress.html">
+<link rel="import" href="shared/product-details.html">
 <dom-module id="weekly-grid">
   <template>
     <style include="shared-styles">
@@ -21,11 +23,19 @@
         margin-left: 0;
       }
       
-      .amountInput,
-      .titleInput {
+      .grid-input {
         border: 0;
         font: inherit;
         background: transparent;
+      }
+      
+      .multiplier-input {
+        width: 30%;
+        text-align: right;
+      }
+      
+      .amount-input {
+        width: 50%
       }
       
       #grid {
@@ -33,6 +43,9 @@
       }
     </style>
     <vaadin-grid id="grid" items="[[products]]" selected-items="{{selectedItems}}">
+      <template class="row-details">
+        <product-details product="[[item]]" nutrients="[[nutrients]]"></product-details>
+      </template>
       <vaadin-grid-selection-column frozen auto-select>
         <template class="header"></template>
         <template>
@@ -43,16 +56,20 @@
         <template class="header">
           <vaadin-grid-sorter path="t" direction="asc">Produkt</vaadin-grid-sorter>
         </template>
-        <template><input value="[[item.t]]" on-change="_handleTitleInput" class="titleInput" itemid="[[item.id]]"></input>
+        <template><input value="[[item.t]]" on-change="_handleTitleInput" class="grid-input" itemid="[[item.id]]"></input>
         </template>
         <template class="footer">
           Suma:
         </template>
       </vaadin-grid-column>
-      <vaadin-grid-column frozen resizable width="90px">
-        <template class="header">Porcja (g)</template>
+      <vaadin-grid-column frozen resizable width="120px">
+        <template class="header">X x porcja (g)</template>
         <template>
-          <input value$="[[item.a]]" type="number" class="amountInput" on-change="_handleAmountInput" itemid="[[item.id]]"></input>
+          <div>
+            <input value$="[[item.m]]" type="number" class="grid-input multiplier-input" on-change="_handleMultiplierInput" itemid="[[item.id]]"></input>
+            x
+            <input value$="[[item.a]]" type="number" class="grid-input amount-input" on-change="_handleAmountInput" itemid="[[item.id]]"></input>
+          </div>
         </template>
         <template class="footer">
           [[formatAmount(sums, "1")]]
@@ -71,9 +88,15 @@
           </vaadin-grid-column>
         </template>
       </template>
+      <vaadin-grid-column width="100px">
+        <template>
+          <paper-button toggles active="{{expanded}}">Szczegóły</paper-button>
+        </template>
+      </vaadin-grid-column>
     </vaadin-grid>
     <div class="grid-actions">
-      <paper-fab icon="polydiet-icons:receipt" id="createReceipt" disabled="[[!isMultipleProductsSelected]]" on-tap="createReceiptFromSelected" title="Utwórz z zaznaczonych przepis"></paper-fab>
+      <paper-fab icon="polydiet-icons:receipt" id="createReceipt" disabled="[[!isMultipleProductsSelected]]" on-tap="createReceiptFromSelected"
+        title="Utwórz z zaznaczonych przepis"></paper-fab>
       <paper-fab icon="polydiet-icons:delete" id="deleteProducts" disabled="[[!isProductSelected]]" on-tap="removeSelected" title="Usuń zaznaczone"></paper-fab>
     </div>
   </template>
@@ -132,6 +155,16 @@
 
           if (!Number.isNaN(value) && value > 0) {
             this.fire('amount-updated', {
+              id: e.target.itemid,
+              value: value
+            });
+          }
+        },
+        _handleMultiplierInput: function (e) {
+          var value = parseInt(e.target.value, 10);
+
+          if (!Number.isNaN(value) && value >= 0) {
+            this.fire('multiplier-updated', {
               id: e.target.itemid,
               value: value
             });

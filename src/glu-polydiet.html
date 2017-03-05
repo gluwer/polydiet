@@ -41,7 +41,7 @@
       #tabs {
         margin-bottom: 10px;
       }
-
+      
       #nutrientsMenu {
         list-style-type: none;
         padding: 0.2rem 1rem;
@@ -57,7 +57,9 @@
             <paper-icon-button icon="polydiet-icons:view-column" class="dropdown-trigger" title="Wybierz kolumny do wyświetlenia"></paper-icon-button>
             <ol class="dropdown-content" id="nutrientsMenu">
               <template is="dom-repeat" items="{{nutrients}}" as="nutrient">
-                <li><paper-checkbox checked="{{!nutrient.hidden}}">[[nutrient.name]]</paper-checkbox></li>
+                <li>
+                  <paper-checkbox checked="{{!nutrient.hidden}}">[[nutrient.name]]</paper-checkbox>
+                </li>
               </template>
             </ol>
           </paper-menu-button>
@@ -122,6 +124,9 @@
       observers: [
         'recalculateSums(weeklyProducts.*)'
       ],
+      listeners: {
+        'multiplier-updated': 'updateMultiplier'
+      },
       _recalculateValues: function (foodWithAmount, factor) {
         foodWithAmount.n = foodWithAmount.n.map(function (n) {
           return n > 0 ? factor * n : n;
@@ -137,7 +142,7 @@
 
         this.sums = this.sums.map(function (id, index) {
           var sum = products.base.reduce(function (sum, product) {
-            var value = index === 0 ? product.a : product.n[index - 1];
+            var value = index === 0 ? product.a : product.n[index - 1] * (product.m || 1);
 
             return value > 0 ? sum + value : sum;
           }, 0);
@@ -161,7 +166,8 @@
           }
 
           foodWithAmount = Object.assign({}, data.food, {
-            a: data.amount
+            a: data.amount,
+            m: 1
           });
           this._recalculateValues(foodWithAmount, foodWithAmount.a / 100);
           this.push("weeklyProducts", foodWithAmount);
@@ -176,6 +182,14 @@
         this._recalculateValues(existingFood, data.value / existingFood.a);
         existingFood.a = data.value;
         this.notifyPath(["weeklyProducts", this.weeklyProducts.indexOf(existingFood), "n"]);
+      },
+      updateMultiplier: function (e, data) {
+        var existingFood,
+          foodId;
+
+        existingFood = this._findById(data.id)[0];
+        existingFood.m = data.value;
+        this.notifyPath(["weeklyProducts", this.weeklyProducts.indexOf(existingFood), "m"]);
       },
       updateTitle: function (e, data) {
         var existingFood;
@@ -196,10 +210,10 @@
         }.bind(this));
       },
       createRecipe: function (e, data) {
-        var newRecipe = data.products.reduce(function(acc, food, index) {
+        var newRecipe = data.products.reduce(function (acc, food, index) {
           acc.t += (index ? ", " : "") + food.t;
           acc.a += food.a;
-          acc.n = acc.n.map(function(v, i) {
+          acc.n = acc.n.map(function (v, i) {
             return v === -1 ? food.n[i] : v + food.n[i];
           });
           return acc;
@@ -207,7 +221,10 @@
           id: '_' + Date.now(),
           t: "Przepis: ",
           a: 0,
-          n: this.nutrients.map(function() { return -1; })
+          m: 1,
+          n: this.nutrients.map(function () {
+            return -1;
+          }),
         });
 
         this.removeFoodsFromList(undefined, data);

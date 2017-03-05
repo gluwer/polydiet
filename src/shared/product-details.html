@@ -1,0 +1,53 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="formatters-behavior.html">
+<dom-module id="product-details">
+  <template>
+    <style>
+       :host {
+        display: block;
+      }
+      
+      .details {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      
+      .element {
+        box-sizing: border-box;
+        width: 16.66%;
+        min-width: 180px;
+        padding: 0 10px;
+      }
+      
+      p {
+        margin: 10px 0 0 0;
+      }
+
+      .title {
+        font-weight: bold;
+      }
+
+      .daily {
+        font-size: 80%;
+      }
+    </style>
+    <div class="details">
+      <template is="dom-repeat" items="[[nutrients]]" as="nutrient">
+        <div class="element">
+          <p><span class="title">[[nutrient.name]]</span><br><span class="amount">[[formatAmount(product, nutrient.path)]]</span>/<span class="daily">[[formatAmount(nutrient, 'goal')]]</span>
+          </p>
+        </div>
+      </template>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'product-details',
+      properties: {
+        nutrients: Array,
+        product: Object
+      },
+      behaviors: [GluBehaviors.Formatters]
+    });
+  </script>
+</dom-module>
