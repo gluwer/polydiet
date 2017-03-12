@@ -13,7 +13,7 @@
     "iron-media-query": "PolymerElements/iron-media-query#^1.0.0",
     "paper-icon-button": "PolymerElements/paper-icon-button#~1.1.0",
     "polymer": "Polymer/polymer#^1.7.0",
-    "vaadin-grid": "v2.0.0-alpha2",
+    "vaadin-grid": "v2.0.0-alpha4",
     "paper-input": "^1.1.23",
     "iron-ajax": "^1.4.3",
     "paper-fab": "^1.2.1",
@@ -31,6 +31,6 @@
   },
   "private": true,
   "resolutions": {
-    "vaadin-grid": "v2.0.0-alpha2"
+    "vaadin-grid": "v2.0.0-alpha4"
   }
 }

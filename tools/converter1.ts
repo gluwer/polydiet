@@ -55,18 +55,18 @@ class NutritionMapping {
   ];
 
   private foodGroups = {
-    '0100': 1, // Nabiał i produkty jajeczne
+    '0100': 1, // Nabiał i produkty jajeczne*
     '0200': 2, // Przyprawy i zioła*
     //'0300': 3, // Żywność dla dzieci
-    '0400': 4, // Tłuszcze i oleje
+    '0400': 4, // Tłuszcze i oleje*
     '0500': 5, // Produkty dla drobiu
     '0600': 6, // Zup, sosów i sosów
     '0700': 7, // Kiełbasy i mięsa obiadowe
     '0800': 8, // Płatki śniadaniowe
     '0900': 9, // Owoce i soki owocowe
     '1000': 10, // Produkty wieprzowe
-    '1100': 11, // Warzywa i produkty roślinne
-    '1200': 12, // Orzechy i nasiona
+    '1100': 11, // Warzywa i produkty roślinne*
+    '1200': 12, // Orzechy i nasiona*
     '1300': 13, // Produkty wołowe
     '1400': 14, // Napoje
     '1500': 15, // Ryby i skorupiaki

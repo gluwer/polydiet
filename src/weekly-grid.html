@@ -1,7 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
-<!--<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-sorter.html">-->
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-sorter.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -54,7 +54,7 @@
       </vaadin-grid-selection-column>
       <vaadin-grid-column frozen resizable width="200px">
         <template class="header">
-          <vaadin-grid-sorter path="t" direction="asc">Produkt</vaadin-grid-sorter>
+          <vaadin-grid-sorter path="t">Produkt</vaadin-grid-sorter>
         </template>
         <template><input value="[[item.t]]" on-change="_handleTitleInput" class="grid-input" itemid="[[item.id]]"></input>
         </template>
@@ -161,7 +161,7 @@
           }
         },
         _handleMultiplierInput: function (e) {
-          var value = parseInt(e.target.value, 10);
+          var value = parseFloat(e.target.value);
 
           if (!Number.isNaN(value) && value >= 0) {
             this.fire('multiplier-updated', {
